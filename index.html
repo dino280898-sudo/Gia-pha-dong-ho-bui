@@ -1,0 +1,1307 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:,">
+<title>Gia Phả Dòng Họ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,500;0,700;0,900;1,500;1,700&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brown:#4a1e0e; --brown2:#5d2a12; --brown3:#6f3a1a;
+  --red:#7d1418; --red2:#9b1c20; --red-dark:#5c0e11;
+  --gold:#c9a24b; --gold2:#e6c87a; --gold-cream:#f7e3a1;
+  --cream:#f3e9cf; --paper:#f7efdb;
+  --bg:#f1e7cd; --surface:#fffdf6; --surface2:#f7efe0;
+  --text:#2b2118; --muted:#6f6152; --line:#ddd0ae;
+  --input:#fffdf8; --shadow:0 4px 20px rgba(90,50,10,.12);
+  --radius:14px; --fs:15px;
+}
+body.fs-large{--fs:17.5px} body.fs-xlarge{--fs:20px}
+body.elder{--fs:19px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Be Vietnam Pro",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;font-size:var(--fs)}
+h1,h2,h3,.serif{font-family:"Noto Serif",serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button,[role="button"],select,summary,input:not([type="checkbox"]){min-height:44px}
+a{color:var(--red2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:10px 22px;border:1px solid var(--line);background:var(--surface);color:var(--text);font-weight:600;font-size:.95em;min-height:44px;text-decoration:none}
+.btn-gold{background:linear-gradient(180deg,var(--gold2),var(--gold));border-color:#a98534;color:#3a2403;font-size:1.05em;padding:13px 34px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.btn-red{background:var(--red);border-color:var(--red-dark);color:#fdf3d8}
+.btn-sm{padding:6px 14px;min-height:38px;font-size:.88em}
+.btn-ghost{background:transparent}
+.btn-danger{color:#b3261e;border-color:#e0b4b0}
+input,select,textarea{background:var(--input);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:1em;width:100%}
+textarea{min-height:100px;resize:vertical;line-height:1.6}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:1px}
+.note{font-size:.88em;color:var(--muted)}
+.notice{border-radius:10px;padding:12px 16px;font-size:.95em;margin-bottom:14px;display:none}
+.notice.ok{display:block;background:#e7f3e4;color:#245c1d;border:1px solid #bcd8b6}
+.notice.err{display:block;background:#fbe7e4;color:#8c1d13;border:1px solid #efc2bc}
+.save-box{border:1px solid #bcd8b6;background:#e7f3e4;color:#245c1d;border-radius:10px;padding:10px 14px;font-size:.93em;margin-bottom:12px;font-weight:600;line-height:1.5}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
+.panel h3{margin:0 0 10px;font-size:1.25em}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid .full{grid-column:1/-1}
+@media (max-width:640px){.form-grid{grid-template-columns:1fr}}
+label.fl{display:block;font-size:.9em;font-weight:600;margin-bottom:2px}
+label.fl input,label.fl select,label.fl textarea{margin-top:5px;font-weight:400}
+.empty{border:1.5px dashed #a98534;border-radius:var(--radius);padding:26px 20px;text-align:center;color:var(--muted);background:var(--surface2)}
+.empty b{color:var(--text);display:block;font-size:1.05em;margin-bottom:4px}
+.tag{display:inline-block;font-size:.72em;font-weight:700;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:2px}
+.tag-dead{background:#efe4ec;color:#7a2d5e}.tag-martyr{background:#fbe3e0;color:#a11a12}.tag-alive{background:#e2f0e0;color:#2e6b24}
+
+/* ============ COVER / BÌA ============ */
+#coverScreen{
+  min-height:100svh;position:relative;overflow:hidden;text-align:center;color:#fdf3d8;
+  background:
+    radial-gradient(ellipse 700px 320px at 50% -80px, rgba(230,200,122,.32), transparent 70%),
+    repeating-linear-gradient(45deg, rgba(230,200,122,.05) 0 2px, transparent 2px 26px),
+    repeating-linear-gradient(-45deg, rgba(230,200,122,.05) 0 2px, transparent 2px 26px),
+    linear-gradient(165deg,#a02327,var(--red) 45%,var(--red-dark) 90%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 18px 48px;
+}
+#coverScreen::before,#coverScreen::after{content:"❖";position:absolute;color:rgba(230,200,122,.30);font-size:150px;line-height:1;top:14px}
+#coverScreen::before{left:-26px}#coverScreen::after{right:-26px}
+#coverScreen .corner{position:absolute;width:74px;height:74px;border:2px solid rgba(230,200,122,.55);pointer-events:none}
+#coverScreen .c-tl{top:14px;left:14px;border-right:none;border-bottom:none;border-radius:14px 0 0 0}
+#coverScreen .c-tr{top:14px;right:14px;border-left:none;border-bottom:none;border-radius:0 14px 0 0}
+#coverScreen .c-bl{bottom:14px;left:14px;border-right:none;border-top:none;border-radius:0 0 0 14px}
+#coverScreen .c-br{bottom:14px;right:14px;border-left:none;border-top:none;border-radius:0 0 14px 0}
+.cover-emblem{width:92px;height:92px;border:2px solid var(--gold2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;background:rgba(0,0,0,.22);box-shadow:0 0 0 6px rgba(230,200,122,.15);margin-bottom:14px}
+.cover-orn{color:var(--gold2);letter-spacing:.55em;font-size:.85em;text-transform:uppercase}
+#coverScreen h1{margin:4px 0 0;font-size:clamp(40px,9vw,68px);font-weight:900;letter-spacing:.13em;color:var(--gold-cream);text-shadow:0 3px 0 rgba(0,0,0,.3)}
+.cover-clan{font-family:"Noto Serif",serif;font-size:clamp(23px,5.5vw,36px);font-weight:700;margin-top:10px;color:#fff}
+.cover-sub{opacity:.93;font-size:1em;margin-top:5px}
+.cover-rule{width:170px;height:3px;background:linear-gradient(90deg,transparent,var(--gold2),transparent);margin:20px auto;border-radius:2px}
+.cover-stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;max-width:640px;width:100%}
+.cover-stat{flex:1 1 150px;background:rgba(0,0,0,.24);border:1px solid rgba(230,200,122,.5);border-radius:var(--radius);padding:16px 12px}
+.cover-stat .v{font-family:"Noto Serif",serif;font-size:2em;font-weight:900;color:var(--gold-cream);line-height:1.1}
+.cover-stat .k{font-size:.82em;text-transform:uppercase;letter-spacing:.08em;opacity:.9}
+.cover-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:26px}
+.btn-outline-gold{background:rgba(0,0,0,.2);border:1px solid var(--gold2);color:var(--gold-cream);padding:12px 26px;font-size:1em}
+.cover-foot{margin-top:26px;font-size:.85em;opacity:.85;font-style:italic}
+
+/* ============ HEADER NÂU ĐẬM ============ */
+#mainApp{display:none}
+.topbar{background:linear-gradient(180deg,var(--brown2),var(--brown));color:#f3e6c8;position:sticky;top:0;z-index:40;box-shadow:0 3px 14px rgba(40,15,0,.35)}
+.topbar-in{max-width:1280px;margin:0 auto;padding:10px 14px 12px}
+.tb-row1{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.tb-brand{flex:1 1 300px;min-width:0}
+.tb-brand h2{margin:0;font-size:clamp(19px,3.4vw,27px);color:#fff;line-height:1.25}
+.tb-brand .addr{font-size:.85em;color:var(--gold2);font-style:italic;margin-top:2px}
+.tb-brand .addr b{color:var(--gold-cream);font-style:normal}
+.main-tabs{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;flex:2 1 480px}
+.mtab{border:1px solid rgba(230,200,122,.35);background:rgba(255,255,255,.08);color:#f3e6c8;border-radius:999px;padding:8px 15px;font-weight:600;font-size:.92em;min-height:40px;white-space:nowrap}
+.mtab[aria-selected="true"]{background:#fff8ea;color:#5d2a12;border-color:#fff8ea}
+.tb-row2{display:flex;gap:8px;margin-top:11px;align-items:stretch;flex-wrap:wrap}
+.tb-search{flex:1 1 260px;display:flex}
+.tb-search input{border-radius:12px;border:none;font-size:1em;padding:11px 16px}
+.tb-tools{display:flex;gap:8px;flex-wrap:wrap}
+.tool-btn{border:1px solid rgba(230,200,122,.35);background:rgba(255,255,255,.10);color:#f3e6c8;border-radius:12px;padding:8px 14px;font-weight:600;font-size:.92em;min-height:44px;white-space:nowrap}
+.tool-btn.on{background:var(--gold2);color:#3a2403;border-color:var(--gold2)}
+.tb-row3{display:flex;gap:10px;margin-top:11px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.elder-pill{background:linear-gradient(180deg,#fdf3d0,#f0d488);color:#5d2a12;border:1px solid #c9a24b;border-radius:999px;padding:8px 18px;font-weight:700;font-size:.95em;min-height:42px}
+.elder-pill.on{background:linear-gradient(180deg,#ffe9a8,#e6c87a);box-shadow:0 0 0 3px rgba(230,200,122,.45)}
+.anniv-pill{background:linear-gradient(180deg,#a02327,#7d1418);color:#fdf3d8;border:1px solid rgba(230,200,122,.55);border-radius:999px;padding:8px 18px;font-weight:700;font-size:.95em;min-height:42px}
+.quickbar{max-width:1280px;margin:0 auto;padding:0 14px}
+.quickbar-btn{width:100%;background:rgba(93,42,18,.55);color:#e9d9ae;border:1px dashed rgba(230,200,122,.45);border-radius:10px;padding:8px 14px;font-size:.88em;font-weight:600;margin:10px 0 0;min-height:40px}
+.quick-panel{display:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;margin-top:10px;font-size:.92em}
+.quick-panel.open{display:block}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.swatch{width:16px;height:16px;border-radius:4px;display:inline-block;border:1px solid rgba(0,0,0,.2)}
+
+/* ============ BẢNG LỌC ============ */
+#filterPanel{display:none;max-width:1280px;margin:12px auto 0;padding:0 14px}
+#filterPanel.open{display:block}
+#filterPanel .panel{margin:0}
+.fp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.fp-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+
+/* ============ LAYOUT ============ */
+.wrap{max-width:1280px;margin:0 auto;padding:0 14px 60px}
+main section{display:none;padding-top:20px}
+main section.active{display:block}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.sec-head h2{margin:0;font-size:1.7em;color:var(--red)}
+.sec-head .count{color:var(--muted);font-size:.92em}
+.lead{color:var(--muted);margin:4px 0 18px;max-width:75ch}
+.subtabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.subtab{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;font-weight:600;font-size:.92em;min-height:40px}
+.subtab[aria-selected="true"]{background:var(--red);color:#fdf3d8;border-color:var(--red-dark)}
+.group-head{font-family:"Noto Serif",serif;font-size:1.2em;color:var(--red);margin:22px 0 10px;display:flex;align-items:center;gap:10px}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ============ SƠ ĐỒ / PHẢ ĐỒ SỐ ============ */
+.plaque{
+  max-width:760px;margin:8px auto 0;text-align:center;color:var(--gold-cream);
+  background:linear-gradient(180deg,#a02327,var(--red) 55%,var(--red-dark));
+  border:3px solid var(--gold);border-radius:16px;padding:20px 22px 16px;
+  box-shadow:0 10px 28px rgba(90,10,10,.35), inset 0 0 0 2px rgba(0,0,0,.25);
+}
+.plaque .p-small{letter-spacing:.42em;font-size:.82em;text-transform:uppercase;color:var(--gold2)}
+.plaque .p-big{font-family:"Noto Serif",serif;font-weight:900;font-size:clamp(26px,5.6vw,44px);letter-spacing:.04em;margin-top:4px;text-transform:uppercase;line-height:1.15}
+.plaque .p-rule{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:10px;color:var(--gold2)}
+.plaque .p-rule::before,.plaque .p-rule::after{content:"";width:110px;height:2px;background:linear-gradient(90deg,transparent,var(--gold2))}
+.plaque .p-rule::after{background:linear-gradient(90deg,var(--gold2),transparent)}
+.tree-tools{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0 10px}
+.tree-tools .btn{background:var(--surface)}
+.tree-stage{
+  position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  background:
+    repeating-linear-gradient(45deg, rgba(160,120,40,.05) 0 2px, transparent 2px 24px),
+    repeating-linear-gradient(-45deg, rgba(160,120,40,.05) 0 2px, transparent 2px 24px),
+    linear-gradient(180deg,#f8f1da,#efe3c2);
+  height:min(68vh,640px);min-height:380px;touch-action:none;cursor:grab;
+}
+.tree-stage:active{cursor:grabbing}
+body.theme-xanh .tree-stage{background:repeating-linear-gradient(45deg, rgba(60,110,60,.05) 0 2px, transparent 2px 24px),linear-gradient(180deg,#eef5e2,#e0ecca)}
+body.theme-toi .tree-stage{background:repeating-linear-gradient(45deg, rgba(230,200,122,.06) 0 2px, transparent 2px 24px),linear-gradient(180deg,#3a2a1c,#2c1f14)}
+#treeCanvas{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;padding:10px 0 18px}
+.gen-band{position:relative;display:flex;align-items:stretch;min-height:86px;border-bottom:3px solid var(--bandline,#c9a24b)}
+.gen-band .gen-label{
+  flex:0 0 62px;display:flex;align-items:center;justify-content:center;text-align:center;
+  font-family:"Noto Serif",serif;font-weight:700;font-size:.92em;color:#3a2403;
+  background:var(--bandlabel,#e6c87a);border-right:1px solid rgba(0,0,0,.08);
+  writing-mode:horizontal-tb;padding:6px 2px;position:sticky;left:0;z-index:2;
+}
+.gen-band .gen-body{flex:1;display:flex;align-items:center;justify-content:center;gap:26px;flex-wrap:nowrap;padding:14px 22px;position:relative}
+.gen-band .gen-body::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--bandline,#57a05a);opacity:.85}
+.fam-group{display:flex;align-items:flex-start;gap:7px;position:relative;padding-top:10px}
+.fam-group::before{content:"";position:absolute;top:0;left:12%;right:12%;height:8px;border:2px solid #57a05a;border-bottom:none;border-radius:6px 6px 0 0}
+.pcard{
+  width:118px;flex:0 0 118px;text-align:center;border-radius:9px;padding:8px 6px 7px;position:relative;
+  background:linear-gradient(180deg,#4a3220,#3b2314);color:#f3e6c8;border:2px solid #8a6a2f;
+  box-shadow:inset 0 0 0 2px #2c1a0c, inset 0 0 0 3.5px rgba(230,200,122,.55), 0 3px 8px rgba(60,30,0,.3);
+  font-family:"Noto Serif",serif;
+}
+button.pcard{cursor:pointer;min-height:0}
+.pcard .rel{font-family:"Be Vietnam Pro",sans-serif;font-size:.62em;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gold2);display:block;margin-bottom:1px}
+.pcard .nm{display:block;font-weight:700;font-size:.78em;line-height:1.25;text-transform:uppercase;min-height:2.4em}
+.pcard .dt{display:block;font-family:"Be Vietnam Pro",sans-serif;font-size:.66em;color:#d9c48d;margin-top:2px}
+.pcard.founder{box-shadow:inset 0 0 0 2px #2c1a0c, inset 0 0 0 3.5px rgba(230,200,122,.55), 0 0 0 3px rgba(230,200,122,.75), 0 3px 10px rgba(60,30,0,.35)}
+.pcard.spouse-card{background:linear-gradient(180deg,#8e1d22,#6d1216)}
+.pcard.male-card{background:linear-gradient(180deg,#274a73,#1d3554)}
+.pcard.female-card{background:linear-gradient(180deg,#8e1d22,#6d1216)}
+.couple-dot{align-self:center;width:9px;height:9px;border-radius:50%;background:#57a05a;border:2px solid #fff;flex:0 0 9px;margin-top:26px;box-shadow:0 0 0 1px #57a05a}
+.tree-hint{
+  position:absolute;left:50%;transform:translateX(-50%);bottom:10px;z-index:5;white-space:nowrap;
+  background:rgba(30,40,70,.88);color:#fff;border-radius:999px;padding:8px 18px;font-size:.85em;pointer-events:none;
+  max-width:94%;overflow:hidden;text-overflow:ellipsis;
+}
+.tree-empty-note{padding:34px 20px;text-align:center;color:var(--muted)}
+
+/* ============ ACCORDION ============ */
+details.acc{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow)}
+details.acc summary{cursor:pointer;padding:14px 18px;font-family:"Noto Serif",serif;font-weight:700;font-size:1.1em;display:flex;align-items:center;gap:10px;list-style:none;min-height:48px}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary .num{background:var(--red);color:var(--gold-cream);border-radius:50%;width:30px;height:30px;flex:0 0 30px;display:inline-flex;align-items:center;justify-content:center;font-size:.85em;font-family:"Be Vietnam Pro",sans-serif}
+details.acc .body{padding:0 18px 18px;font-size:.98em;white-space:pre-wrap}
+details.acc .body .placeholder{color:var(--muted);font-style:italic;white-space:normal}
+
+/* ============ BẢNG ============ */
+.tblwrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:.95em}
+th{background:var(--surface2);text-align:left;padding:11px 14px;font-size:.85em;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+td{padding:11px 14px;border-top:1px solid var(--line);vertical-align:top}
+.num-cell{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stack-cards{display:none}
+.totals{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+.total-box{flex:1 1 150px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow)}
+.total-box .v{font-family:"Noto Serif",serif;font-size:1.45em;font-weight:900}
+.total-box .k{font-size:.8em;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+@media (max-width:640px){
+  .tblwrap table{display:none}
+  .stack-cards{display:grid;gap:10px}
+  .stack-cards .sc{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow);font-size:.95em}
+  .stack-cards .sc b{font-size:1.02em}
+  .stack-cards .sc .row{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.9em}
+}
+
+/* ============ ẢNH ============ */
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.gallery figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.gallery img{width:100%;height:180px;object-fit:cover;display:block;background:var(--surface2)}
+.gallery figcaption{padding:10px 14px;font-size:.9em}
+.gallery figcaption span{color:var(--muted)}
+
+/* ============ DRAWER KHAI BÁO + MODAL ============ */
+.drawer-bg{position:fixed;inset:0;background:rgba(20,8,4,.55);z-index:60;display:none}
+.drawer-bg.open{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(480px,100vw);background:var(--bg);z-index:61;transform:translateX(105%);transition:transform .28s ease;overflow:auto;padding:20px 18px 30px;box-shadow:-8px 0 30px rgba(0,0,0,.3);display:none}
+.drawer.shown{display:block}
+.drawer.open{transform:translateX(0)}
+.drawer h3{margin:0;font-size:1.35em;color:var(--red)}
+.drawer .part{font-family:"Noto Serif",serif;font-weight:700;color:var(--red);margin:20px 0 8px;font-size:1.05em}
+.drawer .x{position:absolute;top:12px;right:12px}
+.modal-bg{position:fixed;inset:0;background:rgba(20,8,4,.6);display:none;align-items:flex-end;justify-content:center;z-index:70;padding:0}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg);width:100%;max-width:640px;max-height:88vh;overflow:auto;border-radius:18px 18px 0 0;padding:22px}
+@media (min-width:640px){.modal-bg{align-items:center;padding:20px}.modal{border-radius:18px}}
+.modal h3{margin:0 0 4px;font-size:1.35em}
+.modal .dates{color:var(--muted);font-size:.92em;margin-bottom:10px}
+.modal dl{display:grid;grid-template-columns:120px 1fr;gap:6px 12px;font-size:.95em;margin:0 0 14px}
+.modal dt{color:var(--muted);font-weight:600}
+.modal dd{margin:0}
+.pin-screen{max-width:460px;margin:26px auto}
+.pin-screen .panel{text-align:left}
+.pinrow{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+.pinrow .grow{flex:1 1 180px}
+.member-admin{display:grid;gap:8px}
+.member-admin .row{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;flex-wrap:wrap}
+.member-admin .row .nm{font-weight:600;flex:1 1 160px}
+footer.site{border-top:1px solid var(--line);margin-top:10px;padding:22px 16px 34px;text-align:center;color:var(--muted);font-size:.88em}
+footer.site .orn{color:#a98534;letter-spacing:.4em}
+@media (prefers-reduced-motion: reduce){.drawer{transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<!-- ================= BÌA ================= -->
+<div id="coverScreen">
+  <span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+  <div class="cover-emblem">🏮</div>
+  <div class="cover-orn">Gia phả · Phả đồ số</div>
+  <h1>GIA PHẢ</h1>
+  <div class="cover-clan" id="coverClanName">Dòng họ …</div>
+  <div class="cover-sub" id="coverClanSub">Quê quán: …</div>
+  <div class="cover-rule"></div>
+  <div class="cover-stats">
+    <div class="cover-stat"><div class="v" id="statGens">0</div><div class="k">Đời trong phả</div></div>
+    <div class="cover-stat"><div class="v" id="statMembers">0</div><div class="k">Tổng thành viên</div></div>
+    <div class="cover-stat"><div class="v" id="statAnniv">0</div><div class="k">Ngày giỗ</div></div>
+  </div>
+  <div class="cover-actions">
+    <button class="btn btn-gold" id="enterBtn" type="button">Vào xem gia phả ↓</button>
+    <button class="btn btn-outline-gold" id="legacyBtn" type="button">✦ Lời nhắn nhủ hậu thế</button>
+  </div>
+  <div class="cover-foot" id="coverChiefLine">Uống nước nhớ nguồn — Ăn quả nhớ kẻ trồng cây</div>
+</div>
+
+<!-- ================= APP CHÍNH ================= -->
+<div id="mainApp">
+  <header class="topbar">
+    <div class="topbar-in">
+      <div class="tb-row1">
+        <div class="tb-brand">
+          <h2>👥 <span id="tbClanName">Gia phả dòng họ …</span></h2>
+          <div class="addr">📍 Địa chỉ: <span id="tbVillage">…</span> · 👑 Trưởng tộc: <b id="tbChief">…</b></div>
+        </div>
+        <nav class="main-tabs" id="tabs" aria-label="Các mục gia phả">
+          <button class="mtab" data-sec="cay" aria-selected="true">👥 Sơ đồ</button>
+          <button class="mtab" data-sec="doc" aria-selected="false">📜 Đọc Gia Phả</button>
+          <button class="mtab" data-sec="gio" aria-selected="false">🕯️ Ngày giỗ</button>
+          <button class="mtab" data-sec="khan" aria-selected="false">🙏 Văn khấn</button>
+          <button class="mtab" data-sec="quy" aria-selected="false">🏅 Công đức</button>
+          <button class="mtab" data-sec="anh" aria-selected="false">🖼️ Trưng bày</button>
+          <button class="mtab" data-sec="khai" aria-selected="false">✍️ Khai báo</button>
+        </nav>
+      </div>
+      <div class="tb-row2">
+        <div class="tb-search"><input type="search" id="q" placeholder="🔍 Tìm tên người thân…" aria-label="Tìm tên người thân"></div>
+        <div class="tb-tools">
+          <button class="tool-btn" id="filterBtn" type="button">⚙️ Lọc</button>
+          <button class="tool-btn" id="themeBtn" type="button" title="Đổi giao diện sơ đồ">🎨</button>
+          <button class="tool-btn" id="fontBtn" type="button" title="Đổi cỡ chữ">Aa</button>
+          <button class="tool-btn" id="noticeBtn" type="button">📣 Thông báo</button>
+          <button class="tool-btn" id="editorBtn" type="button">✒️ Ban biên soạn</button>
+          <button class="tool-btn" id="churchBtn" type="button">📍 Vị trí nhà thờ tổ</button>
+        </div>
+      </div>
+      <div class="tb-row3">
+        <button class="elder-pill" id="elderBtn" type="button" aria-pressed="false">👴 Chế độ người cao tuổi</button>
+        <button class="anniv-pill" id="annivPill" type="button">🕯️ <span id="annivPillText">0 giỗ trong 30 ngày tới</span></button>
+      </div>
+      <button class="quickbar-btn" id="quickBtn" type="button" aria-expanded="false">▼ Lọc nhanh · chú thích · lượt xem</button>
+      <div class="quick-panel" id="quickPanel">
+        <b>Lọc nhanh:</b>
+        <span style="display:inline-flex;gap:6px;flex-wrap:wrap;margin-left:6px">
+          <button class="btn btn-sm" data-quick="all" type="button">Tất cả</button>
+          <button class="btn btn-sm" data-quick="song" type="button">Còn sống</button>
+          <button class="btn btn-sm" data-quick="mat" type="button">Đã mất</button>
+          <button class="btn btn-sm" data-quick="lietsi" type="button">Liệt sĩ</button>
+          <button class="btn btn-sm" data-quick="nam" type="button">Nam</button>
+          <button class="btn btn-sm" data-quick="nu" type="button">Nữ</button>
+        </span>
+        <div class="legend">
+          <b>Chú thích:</b>
+          <span><i class="swatch" style="background:#1d3554"></i> Nam</span>
+          <span><i class="swatch" style="background:#6d1216"></i> Nữ / Vợ</span>
+          <span><i class="swatch" style="background:#3b2314"></i> Thủy tổ / người trong họ</span>
+          <span><i class="swatch" style="background:#57a05a"></i> Đường nối cha — con</span>
+        </div>
+        <p class="note" style="margin:8px 0 0">Lượt xem trang: <b id="viewCount">1</b> · Kéo để di chuyển sơ đồ, dùng nút + / − hoặc chụm 2 ngón để phóng to / thu nhỏ, chạm vào một người để xem chi tiết.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- BẢNG LỌC ĐẦY ĐỦ -->
+  <div id="filterPanel">
+    <div class="panel">
+      <h3>⚙️ Lọc sơ đồ cây</h3>
+      <div class="fp-grid">
+        <label class="fl">Đời<select id="fGen"><option value="">Tất cả các đời</option></select></label>
+        <label class="fl">Giới tính<select id="fGender"><option value="">Nam &amp; Nữ</option><option value="Nam">Nam</option><option value="Nữ">Nữ</option></select></label>
+        <label class="fl">Tình trạng<select id="fStatus"><option value="">Tất cả</option><option value="song">Còn sống</option><option value="mat">Đã mất</option><option value="lietsi">Liệt sĩ</option></select></label>
+        <label class="fl">Chi / phái<input id="fBranch" placeholder="VD: Chi 1, Phái trưởng…"></label>
+        <label class="fl">Quê quán / nơi ở<input id="fHome" placeholder="Tìm theo quê quán, nơi ở…"></label>
+        <label class="fl">Sắp xếp<select id="fSort"><option value="gen">Theo đời, rồi theo tên</option><option value="name">Theo tên A–Z</option><option value="birth">Theo năm sinh</option></select></label>
+      </div>
+      <div class="fp-actions">
+        <button class="btn btn-red btn-sm" id="filterApply" type="button">Áp dụng lọc</button>
+        <button class="btn btn-sm" id="filterClear" type="button">Xóa lọc</button>
+        <button class="btn btn-sm btn-ghost" id="filterClose" type="button">Đóng bảng lọc</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <main>
+      <!-- SƠ ĐỒ -->
+      <section id="sec-cay" class="active">
+        <div class="plaque">
+          <div class="p-small">Phả đồ số dòng họ</div>
+          <div class="p-big" id="plaqueClan">Dòng họ …</div>
+          <div class="p-rule">❖</div>
+        </div>
+        <div class="tree-tools">
+          <button class="btn btn-sm" id="zoomOut" type="button">− Thu nhỏ</button>
+          <button class="btn btn-sm" id="zoomReset" type="button">⟲ Về giữa</button>
+          <button class="btn btn-sm" id="zoomIn" type="button">+ Phóng to</button>
+          <span class="note" id="memberCount" style="align-self:center"></span>
+        </div>
+        <div class="tree-stage" id="treeStage">
+          <div id="treeCanvas"></div>
+          <div class="tree-hint">Kéo để di chuyển • chụm 2 ngón để phóng to/nhỏ • chạm vào một người để xem chi tiết</div>
+        </div>
+        <p class="note" style="margin-top:10px">Sơ đồ xếp theo từng đời từ Thủy tổ xuống con cháu, mỗi đời một dải riêng. Thẻ đỏ là vợ / chồng đi kèm thẻ của người trong họ, đường xanh là đường nối các đời.</p>
+      </section>
+
+      <!-- ĐỌC GIA PHẢ -->
+      <section id="sec-doc">
+        <div class="sec-head"><h2>Đọc Gia Phả</h2><span class="count">7 chương</span></div>
+        <p class="lead">Toàn văn cuốn gia phả của dòng họ, chia 7 chương. Bấm vào từng chương để đọc. Ban biên soạn mở khóa ở cuối trang để soạn nội dung từng chương.</p>
+        <div id="chapters"></div>
+      </section>
+
+      <!-- NGÀY GIỖ -->
+      <section id="sec-gio">
+        <div class="sec-head"><h2>Ngày giỗ trong họ</h2><span class="count" id="gioCount"></span></div>
+        <p class="lead">Danh sách ngày giỗ (theo âm lịch) lấy từ thông tin của các cụ đã mất trong sơ đồ cây, để con cháu gần xa tiện nhớ và sắp xếp về dự giỗ.</p>
+        <div class="subtabs" id="gioTabs">
+          <button class="subtab" data-gio="all" aria-selected="true">Tất cả ngày giỗ</button>
+          <button class="subtab" data-gio="soon" aria-selected="false">Sắp tới · 30 ngày</button>
+          <button class="subtab" data-gio="month" aria-selected="false">Theo tháng âm lịch</button>
+          <button class="subtab" data-gio="lietsi" aria-selected="false">Giỗ liệt sĩ</button>
+        </div>
+        <div id="anniv"></div>
+      </section>
+
+      <!-- VĂN KHẤN -->
+      <section id="sec-khan">
+        <div class="sec-head"><h2>Văn khấn</h2><span class="count">8 bài · 3 nhóm</span></div>
+        <p class="lead">Các bài văn khấn gia tiên dùng trong họ, chia 3 nhóm: ngày thường, ngày lễ Tết và các dịp đặc biệt. Bấm vào từng bài để đọc toàn văn.</p>
+        <div id="prayers"></div>
+      </section>
+
+      <!-- CÔNG ĐỨC -->
+      <section id="sec-quy">
+        <div class="sec-head"><h2>Công đức &amp; Quỹ họ</h2><span class="count" id="fundCount"></span></div>
+        <p class="lead">Sổ ghi nhận đóng góp công đức và thu – chi quỹ họ, công khai để con cháu cùng theo dõi.</p>
+        <h3 class="group-head">1 · Tổng quỹ họ</h3>
+        <div class="totals">
+          <div class="total-box"><div class="k">Tổng thu / công đức</div><div class="v" id="totIn">0 ₫</div></div>
+          <div class="total-box"><div class="k">Tổng chi</div><div class="v" id="totOut">0 ₫</div></div>
+          <div class="total-box"><div class="k">Quỹ còn lại</div><div class="v" id="totBal">0 ₫</div></div>
+        </div>
+        <h3 class="group-head">2 · Thống kê theo năm</h3>
+        <div id="fundYears"></div>
+        <h3 class="group-head">3 · Sổ thu — chi chi tiết</h3>
+        <div id="funds"></div>
+      </section>
+
+      <!-- TRƯNG BÀY -->
+      <section id="sec-anh">
+        <div class="sec-head"><h2>Trưng bày ảnh</h2><span class="count" id="photoCount"></span></div>
+        <p class="lead">Ảnh của dòng họ chia 3 nhóm: nhà thờ họ, ngày giỗ – họp họ và kỷ niệm – sinh hoạt. Ban biên soạn mở khóa ở cuối trang để thêm ảnh vào từng nhóm.</p>
+        <div id="gallery"></div>
+      </section>
+
+      <!-- KHAI BÁO (mở panel trượt) -->
+      <section id="sec-khai">
+        <div class="sec-head"><h2>Khai báo thêm người</h2></div>
+        <p class="lead">Con cháu ở xa, hoặc ai biết thông tin người trong họ chưa có trong gia phả, hãy mở mẫu khai báo và điền đủ 3 phần: thông tin người khai báo, thông tin người cần thêm và ảnh kèm theo. Ban biên soạn sẽ kiểm tra và bổ sung vào sơ đồ cây.</p>
+        <p><button class="btn btn-red" id="openDecl2" type="button">✍️ Mở mẫu khai báo thêm người</button></p>
+        <div id="declList"></div>
+      </section>
+
+      <!-- BAN BIÊN SOẠN -->
+      <section id="sec-editor">
+        <div id="pinScreen" class="pin-screen">
+          <div class="panel">
+            <h3>🔒 Ban biên soạn — Nhập mã PIN</h3>
+            <p class="note" style="margin-top:0">Khu vực dành cho Trưởng tộc và Ban biên soạn để điền, sửa thông tin gia phả. Nhập mã PIN để mở khóa (PIN mặc định khi mới tạo trang là <b>1234</b>, nên đổi ngay sau khi mở khóa).</p>
+            <div class="notice" id="pinNotice"></div>
+            <form class="pinrow" id="pinForm">
+              <label class="fl grow">Mã PIN<input type="password" id="pinInput" inputmode="numeric" autocomplete="off" placeholder="••••"></label>
+              <button class="btn btn-red" type="submit">Mở khóa</button>
+            </form>
+            <p style="margin-top:12px"><button class="btn btn-ghost btn-sm" id="backToTree" type="button">← Quay lại sơ đồ</button></p>
+          </div>
+        </div>
+
+        <div id="editBox" style="display:none">
+          <div class="sec-head"><h2>Ban biên soạn</h2></div>
+          <div class="notice ok" style="display:block">✔ Đã mở khóa Ban biên soạn. Mọi thay đổi sẽ <b>tự động lưu lại trên trình duyệt này</b> và vẫn còn khi bạn đóng rồi mở lại trang trên cùng máy / cùng trình duyệt. <span id="saveStatusTop">Đang kiểm tra bản lưu…</span> Vẫn nên bấm <b>Xuất dữ liệu (JSON)</b> ở mục 7 bên dưới để có thêm bản dự phòng khi đổi máy hoặc gửi cho người khác.</div>
+
+          <div class="panel"><h3>1 · Thông tin dòng họ</h3>
+            <form id="clanForm">
+              <div class="form-grid">
+                <label class="fl">Tên dòng họ<input name="name" placeholder="VD: Dòng họ Nguyễn Thế"></label>
+                <label class="fl">Địa chỉ / quê quán<input name="village" placeholder="VD: Phố An Hòa, phường Hoa Lư, tỉnh Ninh Bình"></label>
+                <label class="fl">Tên Trưởng tộc<input name="chief" placeholder="Họ tên Trưởng tộc"></label>
+                <label class="fl">Vị trí nhà thờ tổ (ghi chú / địa chỉ)<input name="church" placeholder="VD: Nhà thờ tổ tại… (điền để nút Vị trí nhà thờ tổ hiện đúng nơi)"></label>
+                <label class="fl full">Lời nhắn nhủ hậu thế / Lời nhắn của Trưởng tộc<textarea name="message" placeholder="Lời nhắn gửi con cháu trong họ…"></textarea></label>
+                <label class="fl full">Thông báo của họ (hiện khi bấm nút Thông báo)<textarea name="announce" style="min-height:70px" placeholder="VD: Thông báo họp họ, giỗ Tổ sắp tới…"></textarea></label>
+              </div>
+              <p><button class="btn btn-red btn-sm" type="submit">Cập nhật thông tin họ</button></p>
+            </form>
+          </div>
+
+          <div class="panel"><h3>2 · Thêm / sửa thành viên</h3>
+            <form id="memberForm">
+              <input type="hidden" name="id">
+              <div class="form-grid">
+                <label class="fl">Họ và tên *<input required name="name"></label>
+                <label class="fl">Đời thứ *<input required name="gen" type="number" min="1" max="30"></label>
+                <label class="fl">Giới tính<select name="gender"><option>Nam</option><option>Nữ</option></select></label>
+                <label class="fl">Tình trạng<select name="status"><option value="song">Còn sống</option><option value="mat">Đã mất</option><option value="lietsi">Liệt sĩ</option></select></label>
+                <label class="fl">Ngày / năm sinh<input name="birth" placeholder="VD: 12/03/1960"></label>
+                <label class="fl">Ngày / năm mất<input name="death" placeholder="VD: 05/10/2020"></label>
+                <label class="fl">Ngày giỗ (âm lịch)<input name="deathLunar" placeholder="VD: 15/8"></label>
+                <label class="fl">Tên cha<input name="father"></label>
+                <label class="fl">Tên vợ / chồng<input name="spouse"></label>
+                <label class="fl">Quan hệ của vợ / chồng<input name="spouseRel" placeholder="VD: Vợ cả, Vợ hai, Chồng"></label>
+                <label class="fl">Chi / phái<input name="branch" placeholder="VD: Chi 1"></label>
+                <label class="fl">Quê quán / nơi ở<input name="home"></label>
+                <label class="fl full">Ghi chú<textarea name="note" style="min-height:70px"></textarea></label>
+              </div>
+              <p><button class="btn btn-red btn-sm" type="submit" id="memberSubmit">Thêm vào sơ đồ cây</button>
+                 <button class="btn btn-sm" type="button" id="memberCancel" style="display:none">Hủy sửa</button></p>
+            </form>
+            <div class="member-admin" id="memberAdmin"></div>
+          </div>
+
+          <div class="panel"><h3>3 · Nội dung 7 chương gia phả &amp; 8 bài văn khấn</h3>
+            <p class="note">Chọn một chương hoặc bài khấn, soạn nội dung rồi bấm lưu.</p>
+            <label class="fl">Chọn mục cần soạn<select id="textTarget"></select></label>
+            <label class="fl" style="margin-top:10px">Tiêu đề<input id="textTitle"></label>
+            <label class="fl" style="margin-top:10px">Nội dung<textarea id="textBody" style="min-height:180px"></textarea></label>
+            <p><button class="btn btn-red btn-sm" id="textSave" type="button">Lưu nội dung</button></p>
+          </div>
+
+          <div class="panel"><h3>4 · Thêm khoản công đức / thu – chi quỹ họ</h3>
+            <form id="fundForm">
+              <div class="form-grid">
+                <label class="fl">Người đóng góp / nội dung *<input required name="name"></label>
+                <label class="fl">Loại<select name="type"><option value="thu">Thu / Công đức</option><option value="chi">Chi</option></select></label>
+                <label class="fl">Số tiền (đồng) *<input required name="amount" type="number" min="0" step="1000"></label>
+                <label class="fl">Ngày<input name="date" placeholder="VD: 01/01/2026"></label>
+                <label class="fl full">Ghi chú<input name="note"></label>
+              </div>
+              <p><button class="btn btn-red btn-sm" type="submit">Thêm vào sổ quỹ</button></p>
+            </form>
+          </div>
+
+          <div class="panel"><h3>5 · Thêm ảnh trưng bày</h3>
+            <form id="photoForm">
+              <div class="form-grid">
+                <label class="fl">Nhóm ảnh<select name="group"><option value="nhatho">Nhà thờ họ &amp; Từ đường</option><option value="gio">Ngày giỗ &amp; Họp họ</option><option value="kyniem">Kỷ niệm &amp; Sinh hoạt</option></select></label>
+                <label class="fl">Năm<input name="year" placeholder="VD: 2025"></label>
+                <label class="fl full">Đường link ảnh (URL)<input name="url" placeholder="https://…"></label>
+                <label class="fl full">Hoặc chọn ảnh từ máy<input name="file" type="file" accept="image/*"></label>
+                <label class="fl full">Chú thích ảnh<input name="caption" placeholder="VD: Nhà thờ họ, giỗ Tổ năm 2025"></label>
+              </div>
+              <p><button class="btn btn-red btn-sm" type="submit">Thêm ảnh</button></p>
+            </form>
+            <div class="member-admin" id="photoAdmin"></div>
+          </div>
+
+          <div class="panel"><h3>6 · Khai báo chờ duyệt</h3><div id="declAdmin"></div></div>
+
+          <div class="panel"><h3>7 · Dữ liệu &amp; bảo mật</h3>
+            <div class="save-box" id="saveStatus">Đang kiểm tra bản lưu trên trình duyệt này…</div>
+            <p class="note">Mọi cập nhật ở Ban biên soạn — thông tin dòng họ, thành viên, nội dung chương / bài khấn, sổ quỹ, ảnh trưng bày, khai báo đã duyệt và mã PIN — đều tự động lưu trên trình duyệt này và tự khôi phục khi mở lại trang. Bản lưu chỉ nằm trên máy / trình duyệt bạn đang dùng: mở bằng máy khác, trình duyệt khác hoặc chế độ riêng tư sẽ không thấy bản lưu này. Vì vậy hãy xuất thêm file JSON để dự phòng và để chuyển sang máy khác.</p>
+            <p class="note">Xuất toàn bộ dữ liệu gia phả thành 1 file để lưu dự phòng hoặc chuyển sang máy khác, rồi nhập lại file đó để khôi phục.</p>
+            <p style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn btn-sm" id="exportBtn" type="button">⬇ Xuất dữ liệu (JSON)</button>
+              <label class="btn btn-sm" style="cursor:pointer">⬆ Nhập dữ liệu (JSON)<input type="file" id="importFile" accept=".json,application/json" hidden></label>
+              <button class="btn btn-sm" id="printBtn" type="button">📄 Tải bản tóm tắt (.txt)</button>
+            </p>
+            <form class="pinrow" id="changePinForm" style="margin-top:8px">
+              <label class="fl grow">Đổi mã PIN Ban biên soạn<input type="password" name="newpin" inputmode="numeric" autocomplete="off" placeholder="Nhập PIN mới"></label>
+              <button class="btn btn-sm" type="submit">Đổi PIN</button>
+            </form>
+            <p style="margin-top:14px"><button class="btn btn-ghost btn-sm" id="lockBtn" type="button">🔒 Khóa Ban biên soạn</button></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site">
+    <div class="orn">❖ ❖ ❖</div>
+    <p id="footClan">Gia phả dòng họ — Uống nước nhớ nguồn</p>
+    <p>Trang gia phả điện tử để con cháu gần xa cùng tra cứu, tưởng nhớ tổ tiên và giữ gìn nề nếp dòng họ.</p>
+  </footer>
+</div>
+
+<!-- DRAWER KHAI BÁO -->
+<div class="drawer-bg" id="drawerBg"></div>
+<aside class="drawer" id="declDrawer" aria-label="Mẫu khai báo thêm người">
+  <button class="btn btn-sm x" id="declClose" type="button">✕ Đóng</button>
+  <h3>✍️ Khai báo thêm người</h3>
+  <p class="note">Điền đủ 3 phần dưới đây rồi bấm Gửi khai báo. Ban biên soạn sẽ kiểm tra và duyệt vào sơ đồ cây.</p>
+  <div class="notice" id="declNotice"></div>
+  <form id="declForm">
+    <div class="part">Phần 1 · Thông tin người khai báo</div>
+    <div class="form-grid" style="grid-template-columns:1fr">
+      <label class="fl">Họ và tên người khai báo *<input required name="reporter" placeholder="Họ tên của bạn"></label>
+      <label class="fl">Số điện thoại<input name="reporterPhone" placeholder="Để Ban biên soạn liên hệ khi cần"></label>
+      <label class="fl">Quan hệ với người cần thêm<input name="reporterRel" placeholder="VD: Con trai, cháu nội, dâu trong họ…"></label>
+    </div>
+    <div class="part">Phần 2 · Thông tin người cần thêm</div>
+    <div class="form-grid">
+      <label class="fl">Họ và tên người cần thêm *<input required name="name" placeholder="VD: Nguyễn Văn A"></label>
+      <label class="fl">Đời thứ<input name="gen" type="number" min="1" max="30" placeholder="VD: 7"></label>
+      <label class="fl">Giới tính<select name="gender"><option>Nam</option><option>Nữ</option></select></label>
+      <label class="fl">Tình trạng<select name="status"><option value="song">Còn sống</option><option value="mat">Đã mất</option><option value="lietsi">Liệt sĩ</option></select></label>
+      <label class="fl">Năm sinh<input name="birth" placeholder="VD: 1960 hoặc 12/03/1960"></label>
+      <label class="fl">Ngày mất<input name="death" placeholder="VD: 05/10/2020"></label>
+      <label class="fl">Tên cha<input name="father" placeholder="Họ tên người cha trong họ"></label>
+      <label class="fl">Tên vợ / chồng<input name="spouse" placeholder="Họ tên vợ hoặc chồng"></label>
+      <label class="fl">Ngày giỗ (âm lịch)<input name="deathLunar" placeholder="VD: 15/8 âm lịch"></label>
+      <label class="fl">Quê quán / nơi ở<input name="home" placeholder="Quê quán, nơi ở hiện nay"></label>
+      <label class="fl full">Ghi chú thêm<textarea name="note" style="min-height:70px" placeholder="Thông tin khác về người cần thêm…"></textarea></label>
+    </div>
+    <div class="part">Phần 3 · Ảnh kèm theo</div>
+    <div class="form-grid" style="grid-template-columns:1fr">
+      <label class="fl">Ảnh chân dung / ảnh giấy tờ liên quan<input name="photoFile" type="file" accept="image/*"></label>
+      <label class="fl">Hoặc đường link ảnh (URL)<input name="photoUrl" placeholder="https://…"></label>
+    </div>
+    <p style="margin:18px 0 0"><button class="btn btn-red" type="submit" style="width:100%">Gửi khai báo</button></p>
+  </form>
+</aside>
+
+<!-- MODAL: LỜI NHẮN / THÔNG BÁO / NHÀ THỜ / CHI TIẾT NGƯỜI -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h3 id="mName"></h3>
+    <div class="dates" id="mDates"></div>
+    <dl id="mDl"></dl>
+    <div id="mBody" style="font-size:.98em;white-space:pre-wrap;margin-bottom:14px"></div>
+    <button class="btn" id="mClose" type="button">Đóng</button>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function F(form,n){return form.querySelector('[name="'+n+'"]')}
+function fmtMoney(n){return Number(n||0).toLocaleString("vi-VN")+" ₫"}
+var uid=1; function nextId(){return "id"+(Date.now().toString(36))+(uid++)}
+
+var CHAPTER_TITLES=["Chương 1 · Nguồn gốc dòng họ","Chương 2 · Thủy tổ và các đời đầu","Chương 3 · Các chi, phái trong họ","Chương 4 · Truyền thống và nề nếp gia phong","Chương 5 · Những người con tiêu biểu","Chương 6 · Quy ước của dòng họ","Chương 7 · Ghi chép bổ sung"];
+var PRAYER_TITLES=["Văn khấn gia tiên ngày thường","Văn khấn ngày Rằm, mùng Một","Văn khấn ngày Giỗ","Văn khấn Tết Nguyên Đán","Văn khấn tảo mộ Thanh Minh","Văn khấn lễ Vu Lan","Văn khấn cúng Tất niên","Văn khấn cúng Tân niên"];
+var PRAYER_GROUPS=[
+  {name:"Nhóm 1 · Ngày thường & ngày giỗ",items:[0,1,2]},
+  {name:"Nhóm 2 · Lễ Tết & dịp đặc biệt trong năm",items:[3,4,5]},
+  {name:"Nhóm 3 · Cuối năm & đầu năm mới",items:[6,7]}
+];
+var PHOTO_GROUPS=[
+  {key:"nhatho",name:"Nhóm 1 · Nhà thờ họ & Từ đường"},
+  {key:"gio",name:"Nhóm 2 · Ngày giỗ & Họp họ"},
+  {key:"kyniem",name:"Nhóm 3 · Kỷ niệm & Sinh hoạt dòng họ"}
+];
+var BAND_COLORS=[
+  {bg:"#f7ecc9",label:"#f2c230",line:"#d99a16"},
+  {bg:"#fdeeda",label:"#f59b23",line:"#e07b1f"},
+  {bg:"#e6f3d8",label:"#4cc24e",line:"#3d9e46"},
+  {bg:"#e2eefb",label:"#4a90d9",line:"#3a78b8"},
+  {bg:"#f3e4f2",label:"#b678c9",line:"#9a5cb0"},
+  {bg:"#fdeedd",label:"#e08a3c",line:"#c46f24"},
+  {bg:"#e4f2ec",label:"#3fae8a",line:"#2f8a6d"},
+  {bg:"#fdeaea",label:"#d95b5b",line:"#b83f3f"}
+];
+
+var state={
+  pin:"1234",
+  clan:{name:"",village:"",chief:"",message:"",church:"",announce:""},
+  members:[], chapters:CHAPTER_TITLES.map(function(t){return{title:t,body:""}}),
+  prayers:PRAYER_TITLES.map(function(t){return{title:t,body:""}}),
+  funds:[], photos:[], declarations:[]
+};
+var unlocked=false, gioMode="all", views=1;
+
+/* ---------- LƯU TỰ ĐỘNG TRÊN TRÌNH DUYỆT NÀY ---------- */
+var STORAGE_KEY="gia-pha-dong-ho-data-v2";
+var booted=false;
+function serializeState(){return JSON.stringify({app:"gia-pha-dong-ho",version:2,savedAt:new Date().toISOString(),pin:state.pin,clan:state.clan,members:state.members,chapters:state.chapters,prayers:state.prayers,funds:state.funds,photos:state.photos,declarations:state.declarations});}
+function saveStatusText(msg){lastLocalMsg=msg;var full=msg+(syncMsg?" "+syncMsg:"");var a=document.getElementById("saveStatus");if(a)a.textContent=full;var b=document.getElementById("saveStatusTop");if(b)b.textContent=full;}
+function saveData(){
+  if(!booted)return;
+  try{
+    localStorage.setItem(STORAGE_KEY,serializeState());
+    var t=new Date(); function p(n){return (n<10?"0":"")+n;}
+    saveStatusText("✔ Đã lưu tự động lúc "+p(t.getHours())+":"+p(t.getMinutes())+":"+p(t.getSeconds())+" ngày "+p(t.getDate())+"/"+p(t.getMonth()+1)+"/"+t.getFullYear()+" trên trình duyệt này — đóng trang mở lại vẫn còn.");
+    queueSync();
+  }catch(e){
+    saveStatusText("⚠ Chưa lưu tự động được trên trình duyệt này (thường do ảnh quá lớn vượt dung lượng lưu trữ của trình duyệt, hoặc trình duyệt đang chặn lưu trữ). Hãy bấm Xuất dữ liệu (JSON) ngay ở mục 7 để giữ bản dự phòng.");
+  }
+}
+
+/* ---------- DONG BO CHUNG QUA VERCEL (api/data.js + Blob) ---------- */
+/* Doc luu chung: 1 file JSON duy nhat gia-pha/state.json. Khong polling:
+   chi doc 1 lan khi mo trang, chi ghi khi Ban bien soan luu (debounce).
+   Neu may chu chua san sang, trang van chay binh thuong bang localStorage. */
+var SYNC_URL="/api/data";
+var authPin="";
+var lastSyncedJson="";
+var syncTimer=null;
+var localSavedAt="";
+var lastLocalMsg="";
+var syncMsg="\u2022 \u0110\u1ed3ng b\u1ed9 chung: \u0111ang ki\u1ec3m tra m\u00e1y ch\u1ee7\u2026";
+try{var _raw0=localStorage.getItem(STORAGE_KEY);if(_raw0){var _d0=JSON.parse(_raw0);if(_d0&&_d0.savedAt)localSavedAt=_d0.savedAt;}}catch(e){}
+function setSyncMsg(m){syncMsg=m||"";saveStatusText(lastLocalMsg||"");}
+function applySharedDoc(d){
+  if(!d||typeof d!=="object")return false;
+  if(d.pin)state.pin=String(d.pin);
+  if(d.clan&&typeof d.clan==="object")state.clan=d.clan;
+  ["members","chapters","prayers","funds","photos","declarations"].forEach(function(k){if(d[k]&&d[k].length!==undefined)state[k]=d[k];});
+  if(!state.chapters||!state.chapters.length)state.chapters=CHAPTER_TITLES.map(function(t){return{title:t,body:""}});
+  if(!state.prayers||!state.prayers.length)state.prayers=PRAYER_TITLES.map(function(t){return{title:t,body:""}});
+  return true;
+}
+function fetchShared(){
+  fetch(SYNC_URL,{cache:"no-store"}).then(function(r){return r.json();}).then(function(j){
+    if(!j||!j.exists||!j.data){ setSyncMsg("\u2022 \u0110\u1ed3ng b\u1ed9 chung: ch\u01b0a c\u00f3 b\u1ea3n l\u01b0u chung tr\u00ean m\u00e1y ch\u1ee7 \u2014 b\u1ea3n \u0111\u1ea7u ti\u00ean b\u1ea1n l\u01b0u s\u1ebd t\u1ea1o b\u1ea3n chung."); return; }
+    var sharedAt=j.data.savedAt||"";
+    if(!localSavedAt||(sharedAt&&sharedAt>localSavedAt)){
+      if(applySharedDoc(j.data)){
+        renderAll();
+        try{localStorage.setItem(STORAGE_KEY,serializeState());}catch(e){}
+        lastSyncedJson=serializeState(); localSavedAt=sharedAt;
+        setSyncMsg("\u2022 \u0110\u1ed3ng b\u1ed9 chung: \u0111\u00e3 t\u1ea3i b\u1ea3n chung m\u1edbi nh\u1ea5t.");
+      } else setSyncMsg("\u2022 \u0110\u1ed3ng b\u1ed9 chung: b\u1ea3n chung \u0111\u1ecdc l\u1ed7i, \u0111ang d\u00f9ng b\u1ea3n tr\u00ean m\u00e1y n\u00e0y.");
+    } else {
+      lastSyncedJson=serializeState();
+      setSyncMsg("\u2022 \u0110\u1ed3ng b\u1ed9 chung: b\u1ea3n tr\u00ean m\u00e1y n\u00e0y \u0111\u00e3 m\u1edbi nh\u1ea5t.");
+      if(unlocked&&authPin){ lastSyncedJson=""; queueSync(); }
+    }
+  }).catch(function(){ setSyncMsg("\u2022 \u0110\u1ed3ng b\u1ed9 chung: ch\u01b0a k\u1ebft n\u1ed1i \u0111\u01b0\u1ee3c m\u00e1y ch\u1ee7 (Blob c\u00f3 th\u1ec3 \u0111ang b\u1ecb kh\u00f3a) \u2014 d\u1eef li\u1ec7u v\u1eabn l\u01b0u tr\u00ean m\u00e1y n\u00e0y, h\u00e3y Xu\u1ea5t JSON d\u1ef1 ph\u00f2ng."); });
+}
+function queueSync(){ if(!unlocked||!authPin)return; clearTimeout(syncTimer); syncTimer=setTimeout(syncNow,1500); }
+function syncNow(){
+  if(!unlocked||!authPin)return;
+  var body=serializeState();
+  if(body===lastSyncedJson)return;
+  setSyncMsg("\u2022 \u0110\u1ed3ng b\u1ed9 chung: \u0111ang l\u01b0u b\u1ea3n chung\u2026");
+  fetch(SYNC_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pin:authPin,data:JSON.parse(body)})}).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});}).then(function(o){
+    if(o.ok&&o.j&&o.j.ok){ lastSyncedJson=body; try{localSavedAt=JSON.parse(body).savedAt||localSavedAt;}catch(e){} setSyncMsg("\u2022 \u0110\u1ed3ng b\u1ed9 chung: \u0111\u00e3 l\u01b0u, m\u1ecdi m\u00e1y m\u1edf link \u0111\u1ec1u th\u1ea5y b\u1ea3n n\u00e0y."); }
+    else if(o.j&&o.j.error==="wrong_pin"){ setSyncMsg("\u2022 \u0110\u1ed3ng b\u1ed9 chung: sai m\u00e3 PIN \u2014 b\u1ea3n n\u00e0y ch\u01b0a l\u01b0u chung, ch\u1ec9 l\u01b0u tr\u00ean m\u00e1y n\u00e0y."); }
+    else if(o.j&&o.j.error==="blob_unavailable"){ setSyncMsg("\u2022 \u0110\u1ed3ng b\u1ed9 chung: m\u00e1y ch\u1ee7 l\u01b0u tr\u1eef Blob \u0111ang b\u1ecb kh\u00f3a \u2014 b\u1ea3n n\u00e0y ch\u1ec9 l\u01b0u tr\u00ean m\u00e1y n\u00e0y, h\u00e3y Xu\u1ea5t JSON d\u1ef1 ph\u00f2ng."); }
+    else setSyncMsg("\u2022 \u0110\u1ed3ng b\u1ed9 chung: l\u01b0u l\u1ed7i ("+((o.j&&o.j.error)||"kh\u00f4ng r\u00f5")+") \u2014 b\u1ea3n n\u00e0y ch\u1ec9 l\u01b0u tr\u00ean m\u00e1y n\u00e0y.");
+  }).catch(function(){ setSyncMsg("\u2022 \u0110\u1ed3ng b\u1ed9 chung: m\u1ea5t k\u1ebft n\u1ed1i m\u00e1y ch\u1ee7 \u2014 b\u1ea3n n\u00e0y ch\u1ec9 l\u01b0u tr\u00ean m\u00e1y n\u00e0y."); });
+}
+function syncDeclaration(entry){
+  fetch(SYNC_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"declare",entry:entry})}).then(function(r){return r.json();}).then(function(j){ if(j&&j.ok){ lastSyncedJson=""; } }).catch(function(){});
+}
+
+function loadSavedData(){
+  try{
+    var raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return false;
+    var d=JSON.parse(raw);
+    if(!d||typeof d!=="object")return false;
+    if(d.pin)state.pin=String(d.pin);
+    if(d.clan&&typeof d.clan==="object")state.clan=d.clan;
+    ["members","chapters","prayers","funds","photos","declarations"].forEach(function(k){if(d[k]&&d[k].length!==undefined)state[k]=d[k];});
+    if(!state.chapters||!state.chapters.length)state.chapters=CHAPTER_TITLES.map(function(t){return{title:t,body:""}});
+    if(!state.prayers||!state.prayers.length)state.prayers=PRAYER_TITLES.map(function(t){return{title:t,body:""}});
+    state.photos.forEach(function(p){if(!p.group)p.group="nhatho";});
+    state.members.forEach(function(m){if(m.spouseRel==null)m.spouseRel="";if(m.branch==null)m.branch="";});
+    if(state.clan.church==null)state.clan.church="";
+    if(state.clan.announce==null)state.clan.announce="";
+    return true;
+  }catch(e){return false;}
+}
+
+/* ---------- MODAL DÙNG CHUNG ---------- */
+function showModal(title,dates,rows,body){
+  $("#mName").innerHTML=title; $("#mDates").textContent=dates||"";
+  $("#mDl").innerHTML=rows&&rows.length?rows.map(function(r){return "<dt>"+esc(r[0])+"</dt><dd>"+esc(r[1])+"</dd>"}).join(""):"";
+  $("#mBody").textContent=body||"";
+  $("#modalBg").classList.add("open");
+}
+$("#mClose").addEventListener("click",function(){$("#modalBg").classList.remove("open")});
+$("#modalBg").addEventListener("click",function(e){if(e.target===this)this.classList.remove("open")});
+
+/* ---------- BÌA ---------- */
+$("#enterBtn").addEventListener("click",function(){
+  $("#coverScreen").style.display="none"; $("#mainApp").style.display="block";
+  views++; $("#viewCount").textContent=views;
+  centerTree(); window.scrollTo({top:0});
+});
+$("#legacyBtn").addEventListener("click",function(){
+  showModal("✦ Lời nhắn nhủ hậu thế","",state.clan.chief?[["Trưởng tộc",state.clan.chief]]:null,
+    state.clan.message||"Chưa có lời nhắn — Trưởng tộc và Ban biên soạn sẽ điền nội dung này trong mục Ban biên soạn.");
+});
+
+/* ---------- ĐIỀU HƯỚNG TAB ---------- */
+function goSection(sec){
+  if(sec==="khai"){ openDrawer(); return; }
+  $$("#tabs .mtab").forEach(function(t){t.setAttribute("aria-selected", t.dataset.sec===sec?"true":"false")});
+  $$("main section").forEach(function(s){s.classList.remove("active")});
+  var el=$("#sec-"+sec); if(el)el.classList.add("active");
+  if(sec==="cay")setTimeout(centerTree,60);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+$$("#tabs .mtab").forEach(function(tab){ tab.addEventListener("click",function(){goSection(tab.dataset.sec)}) });
+$("#editorBtn").addEventListener("click",function(){ goSection("editor"); });
+$("#backToTree").addEventListener("click",function(){ goSection("cay"); });
+$("#annivPill").addEventListener("click",function(){ goSection("gio"); });
+$("#noticeBtn").addEventListener("click",function(){
+  showModal("📣 Thông báo của dòng họ","",null, state.clan.announce || "Hiện chưa có thông báo mới. Ban biên soạn sẽ đăng thông báo họp họ, ngày giỗ và các việc chung của họ tại đây.");
+});
+$("#churchBtn").addEventListener("click",function(){
+  showModal("📍 Vị trí nhà thờ tổ","", state.clan.village?[["Địa chỉ dòng họ",state.clan.village]]:null,
+    state.clan.church || "Chưa ghi vị trí nhà thờ tổ — Ban biên soạn mở khóa ở mục Ban biên soạn để điền địa chỉ nhà thờ tổ của họ.");
+});
+$("#quickBtn").addEventListener("click",function(){
+  var p=$("#quickPanel"), open=p.classList.toggle("open");
+  this.setAttribute("aria-expanded",open?"true":"false");
+  this.textContent=(open?"▲":"▼")+" Lọc nhanh · chú thích · lượt xem";
+});
+$$("#quickPanel [data-quick]").forEach(function(b){ b.addEventListener("click",function(){
+  var v=b.dataset.quick;
+  if(v==="all"){$("#fStatus").value="";$("#fGender").value="";}
+  else if(v==="nam"){$("#fGender").value="Nam";}
+  else if(v==="nu"){$("#fGender").value="Nữ";}
+  else{$("#fStatus").value=v;}
+  goSection("cay"); renderTree();
+})});
+
+/* ---------- CÔNG CỤ HEADER ---------- */
+var themes=["", "theme-xanh","theme-toi"], themeIdx=0;
+$("#themeBtn").addEventListener("click",function(){
+  document.body.classList.remove(themes[1],themes[2]);
+  themeIdx=(themeIdx+1)%themes.length;
+  if(themes[themeIdx])document.body.classList.add(themes[themeIdx]);
+  this.classList.toggle("on",themeIdx!==0);
+});
+var fsModes=["","fs-large","fs-xlarge"], fsIdx=0;
+$("#fontBtn").addEventListener("click",function(){
+  document.body.classList.remove(fsModes[1],fsModes[2]);
+  fsIdx=(fsIdx+1)%fsModes.length;
+  if(fsModes[fsIdx])document.body.classList.add(fsModes[fsIdx]);
+});
+$("#elderBtn").addEventListener("click",function(){
+  var on=document.body.classList.toggle("elder");
+  this.classList.toggle("on",on); this.setAttribute("aria-pressed",on?"true":"false");
+});
+$("#filterBtn").addEventListener("click",function(){
+  var p=$("#filterPanel"); p.classList.toggle("open");
+  this.classList.toggle("on",p.classList.contains("open"));
+});
+$("#filterClose").addEventListener("click",function(){ $("#filterPanel").classList.remove("open"); $("#filterBtn").classList.remove("on"); });
+$("#filterClear").addEventListener("click",function(){
+  $("#fGen").value="";$("#fGender").value="";$("#fStatus").value="";$("#fBranch").value="";$("#fHome").value="";$("#q").value=""; renderTree();
+});
+$("#filterApply").addEventListener("click",function(){ goSection("cay"); renderTree(); });
+
+/* ---------- NGÀY GIỖ TRONG 30 NGÀY TỚI (âm lịch) ---------- */
+function lunarToday(){
+  try{
+    var parts=new Intl.DateTimeFormat("en-u-ca-chinese",{day:"numeric",month:"numeric"}).formatToParts(new Date());
+    var d=0,mo=0;
+    parts.forEach(function(p){ if(p.type==="day")d=parseInt(p.value,10); if(p.type==="month")mo=parseInt(p.value,10); });
+    if(d&&mo)return{day:d,month:mo};
+  }catch(e){}
+  var n=new Date(); return{day:n.getDate(),month:n.getMonth()+1};
+}
+function annivDaysUntil(m){
+  var p=String(m.deathLunar||"").match(/(\d+)\s*\/\s*(\d+)/);
+  if(!p)return null;
+  var t=lunarToday();
+  var a=(Number(p[2])-1)*30+Number(p[1]), b=(t.month-1)*30+t.day;
+  return ((a-b)%360+360)%360;
+}
+function annivWithin30(m){ var d=annivDaysUntil(m); return d!==null&&d<=30; }
+
+/* ---------- RENDER: THÔNG TIN HỌ ---------- */
+function renderClan(){
+  var nm=state.clan.name||"";
+  $("#coverClanName").textContent=nm||"Dòng họ …";
+  $("#coverClanSub").textContent="Quê quán: "+(state.clan.village||"…")+(state.clan.chief?" · Trưởng tộc: "+state.clan.chief:"");
+  $("#tbClanName").textContent="Gia phả "+(nm||"dòng họ …");
+  $("#tbVillage").textContent=state.clan.village||"…";
+  $("#tbChief").textContent=(state.clan.chief||"…").toUpperCase();
+  $("#plaqueClan").textContent=(nm||"Dòng họ …").replace(/^Dòng họ\s*/i,"");
+  document.title=(nm?nm+" — ":"")+"Gia Phả Dòng Họ";
+  $("#footClan").textContent=(nm||"Gia phả dòng họ")+" — Uống nước nhớ nguồn";
+  var gens={}; state.members.forEach(function(m){gens[m.gen]=true});
+  $("#statGens").textContent=Object.keys(gens).length;
+  $("#statMembers").textContent=state.members.length;
+  var ann=state.members.filter(function(m){return m.status!=="song"&&(m.deathLunar||m.death)});
+  $("#statAnniv").textContent=ann.length;
+  var soon=ann.filter(annivWithin30).length;
+  $("#annivPillText").textContent=soon+" giỗ trong 30 ngày tới";
+}
+
+/* ---------- RENDER: SƠ ĐỒ ---------- */
+function statusTag(m){
+  if(m.status==="lietsi")return '<span class="tag tag-martyr">Liệt sĩ</span>';
+  if(m.status==="mat")return '<span class="tag tag-dead">Đã mất</span>';
+  return '<span class="tag tag-alive">Còn sống</span>';
+}
+function filteredMembers(){
+  var q=$("#q").value.trim().toLowerCase();
+  var g=$("#fGen").value, gd=$("#fGender").value, st=$("#fStatus").value;
+  var br=$("#fBranch").value.trim().toLowerCase(), hm=$("#fHome").value.trim().toLowerCase();
+  return state.members.filter(function(m){
+    if(g&&String(m.gen)!==g)return false;
+    if(gd&&m.gender!==gd)return false;
+    if(st&&m.status!==st)return false;
+    if(br&&(m.branch||"").toLowerCase().indexOf(br)===-1)return false;
+    if(hm&&(m.home||"").toLowerCase().indexOf(hm)===-1)return false;
+    if(q){var hay=(m.name+" "+(m.father||"")+" "+(m.spouse||"")+" "+(m.home||"")+" "+(m.branch||"")+" "+(m.note||"")).toLowerCase(); if(hay.indexOf(q)===-1)return false;}
+    return true;
+  });
+}
+function shortDates(m,isSpouse){
+  if(isSpouse){ return m.death?("Mất: "+esc(m.death)):(m.birth?("Sinh: "+esc(m.birth)):""); }
+  if(m.status!=="song"&&m.death)return "Mất: "+esc(m.death);
+  if(m.birth)return "Sinh: "+esc(m.birth);
+  if(m.death)return "Mất: "+esc(m.death);
+  return "";
+}
+function renderTree(){
+  var list=filteredMembers(), total=state.members.length;
+  var gensAll={}; state.members.forEach(function(m){gensAll[m.gen]=true});
+  $("#memberCount").textContent= total ? (list.length+" / "+total+" người · "+Object.keys(gensAll).length+" đời") : "";
+  var sel=$("#fGen"), cur=sel.value;
+  sel.innerHTML='<option value="">Tất cả các đời</option>'+Object.keys(gensAll).sort(function(a,b){return a-b}).map(function(g){return '<option value="'+g+'">Đời '+g+'</option>'}).join("");
+  sel.value=cur;
+  var box=$("#treeCanvas");
+  if(!total){
+    box.innerHTML='<div class="tree-empty-note" style="width:min(680px,92vw);margin:30px auto"><div class="empty"><b>Chưa có thành viên nào trong sơ đồ</b>Ban biên soạn bấm nút “Ban biên soạn” ở đầu trang, nhập mã PIN để thêm Thủy tổ và các thành viên — hoặc con cháu gửi thông tin qua mục “Khai báo”. Sơ đồ sẽ tự xếp thành từng dải Đời 1, Đời 2… giống phả đồ mẫu.</div></div>';
+    box.style.width=""; fitWidth(); return;
+  }
+  if(!list.length){
+    box.innerHTML='<div class="tree-empty-note" style="width:min(680px,92vw);margin:30px auto"><div class="empty"><b>Không tìm thấy ai khớp với điều kiện lọc</b>Thử xóa bớt từ khóa hoặc bấm “Xóa lọc” trong bảng Lọc.</div></div>';
+    box.style.width=""; fitWidth(); return;
+  }
+  var sortMode=$("#fSort").value;
+  var byGen={};
+  list.forEach(function(m){(byGen[m.gen]=byGen[m.gen]||[]).push(m)});
+  var html=Object.keys(byGen).sort(function(a,b){return a-b}).map(function(g){
+    var arr=byGen[g].slice();
+    if(sortMode==="name")arr.sort(function(a,b){return a.name.localeCompare(b.name,"vi")});
+    else if(sortMode==="birth")arr.sort(function(a,b){return String(a.birth||"9999").localeCompare(String(b.birth||"9999"))});
+    else arr.sort(function(a,b){return (a.father||"").localeCompare(b.father||"","vi")||a.name.localeCompare(b.name,"vi")});
+    // nhóm theo tên cha để các anh em đứng cạnh nhau
+    var groups={}, order=[];
+    arr.forEach(function(m){var k=(m.father||"").trim().toLowerCase()||"__root"+m.id; if(!groups[k]){groups[k]=[];order.push(k)} groups[k].push(m)});
+    var groupsHtml=order.map(function(k){
+      var cards=groups[k].map(function(m){
+        var cls=m.gender==="Nam"?"male-card":"female-card";
+        var main='<button type="button" class="pcard '+cls+(Number(g)===1?" founder":"")+'" data-id="'+m.id+'">'
+          +'<span class="nm">'+esc(m.name)+'</span>'
+          +'<span class="dt">'+shortDates(m,false)+'</span></button>';
+        var spouse="";
+        if(m.spouse){
+          spouse='<span class="couple-dot" aria-hidden="true"></span>'
+            +'<span class="pcard spouse-card"><span class="rel">'+esc(m.spouseRel||(m.gender==="Nam"?"Vợ":"Chồng"))+'</span>'
+            +'<span class="nm">'+esc(m.spouse)+'</span><span class="dt"></span></span>';
+        }
+        return main+spouse;
+      }).join("");
+      return '<div class="fam-group">'+cards+'</div>';
+    }).join("");
+    var c=BAND_COLORS[(Number(g)-1)%BAND_COLORS.length];
+    return '<div class="gen-band" style="background:'+c.bg+';--bandline:'+c.line+';--bandlabel:'+c.label+'">'
+      +'<div class="gen-label">Đời '+g+'</div><div class="gen-body">'+groupsHtml+'</div></div>';
+  }).join("");
+  box.innerHTML=html;
+  fitWidth();
+  $$("#treeCanvas .pcard[data-id]").forEach(function(el){ el.addEventListener("click",function(ev){ ev.stopPropagation(); openPerson(el.dataset.id); }); });
+}
+function fitWidth(){
+  var box=$("#treeCanvas");
+  box.style.width="max-content";
+  var stageW=$("#treeStage").clientWidth||900;
+  var need=box.offsetWidth;
+  if(need<stageW)box.style.width=stageW+"px";
+}
+/* kéo / phóng to sơ đồ */
+var view={x:0,y:0,s:1};
+function applyView(){ $("#treeCanvas").style.transform="translate("+view.x+"px,"+view.y+"px) scale("+view.s+")"; }
+function centerTree(){
+  var stage=$("#treeStage"), box=$("#treeCanvas");
+  view.s=1; view.y=0;
+  view.x=Math.max(0,(stage.clientWidth-(box.offsetWidth||stage.clientWidth))/2);
+  applyView();
+}
+$("#zoomIn").addEventListener("click",function(){ view.s=Math.min(2.2,view.s*1.2); applyView(); });
+$("#zoomOut").addEventListener("click",function(){ view.s=Math.max(.35,view.s/1.2); applyView(); });
+$("#zoomReset").addEventListener("click",centerTree);
+(function(){
+  var stage=$("#treeStage"), drag=null, pinch=0;
+  stage.addEventListener("pointerdown",function(e){ drag={x:e.clientX,y:e.clientY,vx:view.x,vy:view.y}; stage.setPointerCapture(e.pointerId); });
+  stage.addEventListener("pointermove",function(e){ if(!drag)return; view.x=drag.vx+(e.clientX-drag.x); view.y=drag.vy+(e.clientY-drag.y); applyView(); });
+  stage.addEventListener("pointerup",function(){ drag=null; });
+  stage.addEventListener("pointercancel",function(){ drag=null; });
+  stage.addEventListener("wheel",function(e){ e.preventDefault(); view.s=Math.max(.35,Math.min(2.2, view.s*(e.deltaY<0?1.08:0.93))); applyView(); },{passive:false});
+  stage.addEventListener("touchmove",function(e){
+    if(e.touches.length===2){ e.preventDefault(); var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+      if(pinch) view.s=Math.max(.35,Math.min(2.2, view.s*(d/pinch)));
+      pinch=d; applyView(); }
+  },{passive:false});
+  stage.addEventListener("touchend",function(){ pinch=0; });
+})();
+function openPerson(id){
+  var m=null; state.members.forEach(function(x){if(x.id===id)m=x});
+  if(!m)return;
+  var rows=[];
+  rows.push(["Đời","Đời "+m.gen+(m.branch?" · "+m.branch:"")]);
+  rows.push(["Giới tính",m.gender]);
+  if(m.father)rows.push(["Cha",m.father]);
+  if(m.spouse)rows.push([m.spouseRel||(m.gender==="Nam"?"Vợ":"Chồng"),m.spouse]);
+  if(m.deathLunar)rows.push(["Ngày giỗ",m.deathLunar+" (âm lịch)"]);
+  if(m.home)rows.push(["Quê quán / nơi ở",m.home]);
+  showModal(esc(m.name)+statusTag(m), "Đời "+m.gen+" · "+m.gender+((m.birth||m.death)?" · "+(m.birth||"…")+" – "+(m.death||"…"):""), rows, m.note||"");
+}
+
+/* ---------- RENDER: CHƯƠNG & KHẤN ---------- */
+function renderTexts(){
+  $("#chapters").innerHTML=state.chapters.map(function(c,i){
+    return '<details class="acc"><summary><span class="num">'+(i+1)+'</span>'+esc(c.title)+'</summary><div class="body">'
+      +(c.body?esc(c.body):'<span class="placeholder">Chưa có nội dung — Ban biên soạn mở khóa để soạn chương này.</span>')+'</div></details>';
+  }).join("");
+  $("#prayers").innerHTML=PRAYER_GROUPS.map(function(gr){
+    return '<h3 class="group-head">'+esc(gr.name)+'</h3>'+gr.items.map(function(i){
+      var p=state.prayers[i];
+      return '<details class="acc"><summary><span class="num">'+(i+1)+'</span>'+esc(p.title)+'</summary><div class="body">'
+        +(p.body?esc(p.body):'<span class="placeholder">Chưa có nội dung — Ban biên soạn mở khóa để soạn bài khấn này.</span>')+'</div></details>';
+    }).join("");
+  }).join("");
+}
+
+/* ---------- RENDER: NGÀY GIỖ ---------- */
+$$("#gioTabs .subtab").forEach(function(b){ b.addEventListener("click",function(){
+  $$("#gioTabs .subtab").forEach(function(t){t.setAttribute("aria-selected","false")});
+  b.setAttribute("aria-selected","true"); gioMode=b.dataset.gio; renderAnniv();
+})});
+function renderAnniv(){
+  var rows=state.members.filter(function(m){return m.status!=="song"&&(m.deathLunar||m.death)});
+  if(gioMode==="lietsi")rows=rows.filter(function(m){return m.status==="lietsi"});
+  if(gioMode==="soon"){
+    rows=rows.filter(annivWithin30);
+  }
+  rows.sort(function(a,b){
+    function key(m){ var p=String(m.deathLunar||"").match(/(\d+)\s*\/\s*(\d+)/); return p?(Number(p[2])*100+Number(p[1])):9999; }
+    return key(a)-key(b);
+  });
+  $("#gioCount").textContent=rows.length?rows.length+" ngày giỗ":"";
+  var box=$("#anniv");
+  if(!state.members.filter(function(m){return m.status!=="song"&&(m.deathLunar||m.death)}).length){
+    box.innerHTML='<div class="empty"><b>Chưa có ngày giỗ nào được ghi</b>Khi Ban biên soạn ghi ngày mất / ngày giỗ (âm lịch) cho các cụ đã mất trong sơ đồ cây, danh sách này sẽ tự hiện ở đây.</div>'; return;
+  }
+  if(!rows.length){ box.innerHTML='<div class="empty"><b>Không có ngày giỗ nào trong nhóm này</b>Thử chọn tab con khác ở trên.</div>'; return; }
+  var noteSoon = gioMode==="soon" ? '<p class="note">Các ngày giỗ có ngày âm lịch rơi vào 30 ngày tới, tính theo lịch âm hôm nay.</p>' : "";
+  var monthHead = gioMode==="month" ? "" : "";
+  box.innerHTML=noteSoon+'<div class="tblwrap"><table><thead><tr><th>Người</th><th>Đời</th><th>Ngày giỗ (ÂL)</th><th>Ngày mất (DL)</th><th>Ghi chú</th></tr></thead><tbody>'
+    +rows.map(function(m){return "<tr><td><b>"+esc(m.name)+"</b>"+(m.status==="lietsi"?'<span class="tag tag-martyr">Liệt sĩ</span>':"")+"</td><td>Đời "+m.gen+"</td><td>"+esc(m.deathLunar||"—")+"</td><td>"+esc(m.death||"—")+"</td><td>"+esc(m.branch||"")+"</td></tr>"}).join("")
+    +'</tbody></table></div><div class="stack-cards">'
+    +rows.map(function(m){return '<div class="sc"><b>'+esc(m.name)+'</b> <span style="color:var(--muted)">· Đời '+m.gen+'</span><div class="row"><span>Ngày giỗ (ÂL)</span><span>'+esc(m.deathLunar||"—")+'</span></div><div class="row"><span>Ngày mất (DL)</span><span>'+esc(m.death||"—")+'</span></div></div>'}).join("")
+    +'</div>';
+}
+
+/* ---------- RENDER: QUỸ ---------- */
+function yearOf(f){ var m=String(f.date||"").match(/(20\d\d|19\d\d)/); return m?m[1]:"Chưa ghi năm"; }
+function renderFunds(){
+  var tin=0,tout=0;
+  state.funds.forEach(function(f){ if(f.type==="chi")tout+=Number(f.amount)||0; else tin+=Number(f.amount)||0; });
+  $("#totIn").textContent=fmtMoney(tin); $("#totOut").textContent=fmtMoney(tout); $("#totBal").textContent=fmtMoney(tin-tout);
+  $("#fundCount").textContent=state.funds.length?state.funds.length+" khoản":"";
+  var yb=$("#fundYears"), box=$("#funds");
+  if(!state.funds.length){
+    yb.innerHTML='<div class="empty"><b>Chưa có số liệu theo năm</b>Số liệu sẽ tự tổng hợp khi Ban biên soạn ghi các khoản thu – chi kèm ngày tháng.</div>';
+    box.innerHTML='<div class="empty"><b>Sổ quỹ chưa có khoản nào</b>Ban biên soạn mở khóa để ghi nhận công đức và các khoản thu – chi của họ.</div>'; return;
+  }
+  var years={};
+  state.funds.forEach(function(f){ var y=yearOf(f); years[y]=years[y]||{thu:0,chi:0}; if(f.type==="chi")years[y].chi+=Number(f.amount)||0; else years[y].thu+=Number(f.amount)||0; });
+  var ykeys=Object.keys(years).sort().reverse();
+  yb.innerHTML='<div class="tblwrap"><table><thead><tr><th>Năm</th><th style="text-align:right">Thu / Công đức</th><th style="text-align:right">Chi</th><th style="text-align:right">Còn lại</th></tr></thead><tbody>'
+    +ykeys.map(function(y){return "<tr><td><b>"+esc(y)+"</b></td><td class='num-cell'>"+fmtMoney(years[y].thu)+"</td><td class='num-cell'>"+fmtMoney(years[y].chi)+"</td><td class='num-cell'>"+fmtMoney(years[y].thu-years[y].chi)+"</td></tr>"}).join("")
+    +'</tbody></table></div><div class="stack-cards">'
+    +ykeys.map(function(y){return '<div class="sc"><b>Năm '+esc(y)+'</b><div class="row"><span>Thu</span><span>'+fmtMoney(years[y].thu)+'</span></div><div class="row"><span>Chi</span><span>'+fmtMoney(years[y].chi)+'</span></div><div class="row"><span>Còn lại</span><span>'+fmtMoney(years[y].thu-years[y].chi)+'</span></div></div>'}).join("")+'</div>';
+  box.innerHTML='<div class="tblwrap"><table><thead><tr><th>Nội dung</th><th>Ngày</th><th style="text-align:right">Số tiền</th></tr></thead><tbody>'
+    +state.funds.map(function(f){return "<tr><td><b>"+esc(f.name)+"</b>"+(f.note?'<br><span style="color:var(--muted);font-size:.88em">'+esc(f.note)+"</span>":"")+'</td><td>'+esc(f.date||"—")+'</td><td class="num-cell">'+(f.type==="chi"?"−":"+")+" "+fmtMoney(f.amount)+"</td></tr>"}).join("")
+    +'</tbody></table></div><div class="stack-cards">'
+    +state.funds.map(function(f){return '<div class="sc"><b>'+esc(f.name)+'</b><div class="row"><span>'+esc(f.date||"")+'</span><span>'+(f.type==="chi"?"Chi: −":"Thu: +")+" "+fmtMoney(f.amount)+"</span></div>"+(f.note?'<div style="color:var(--muted);font-size:.9em">'+esc(f.note)+"</div>":"")+"</div>"}).join("")+'</div>';
+}
+
+/* ---------- RENDER: ẢNH ---------- */
+function renderGallery(){
+  $("#photoCount").textContent=state.photos.length?state.photos.length+" ảnh":"";
+  $("#gallery").innerHTML=PHOTO_GROUPS.map(function(gr){
+    var items=state.photos.filter(function(p){return (p.group||"nhatho")===gr.key});
+    var inner= items.length
+      ? '<div class="gallery">'+items.map(function(p){return '<figure><img src="'+esc(p.url)+'" alt="'+esc(p.caption||"Ảnh dòng họ")+'" loading="lazy"><figcaption>'+esc(p.caption||"Ảnh dòng họ")+(p.year?' <span>· '+esc(p.year)+'</span>':"")+'</figcaption></figure>'}).join("")+"</div>"
+      : '<div class="empty"><b>Chưa có ảnh trong nhóm này</b>Ban biên soạn mở khóa để thêm ảnh vào nhóm “'+esc(gr.name.replace(/^Nhóm \d · /,""))+'”.</div>';
+    return '<h3 class="group-head">'+esc(gr.name)+'</h3>'+inner;
+  }).join("");
+  var pa=$("#photoAdmin");
+  if(unlocked){
+    pa.innerHTML=state.photos.length? state.photos.map(function(p){
+      return '<div class="row"><span class="nm">'+esc(p.caption||"Ảnh dòng họ")+' <span class="note">· '+esc(p.year||"")+'</span></span><button class="btn btn-sm btn-danger" data-delphoto="'+p.id+'" type="button">Xóa ảnh</button></div>';
+    }).join("") : '<p class="note">Chưa có ảnh nào.</p>';
+    $$("#photoAdmin [data-delphoto]").forEach(function(b){ b.addEventListener("click",function(){ state.photos=state.photos.filter(function(x){return x.id!==b.dataset.delphoto}); renderGallery(); saveData(); editorMsg("Đã xóa ảnh và lưu lại thay đổi."); }); });
+  }
+}
+
+/* ---------- KHAI BÁO: DRAWER + DANH SÁCH ---------- */
+function openDrawer(){
+  var d=$("#declDrawer"); d.classList.add("shown");
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ d.classList.add("open"); }); });
+  $("#drawerBg").classList.add("open");
+}
+function closeDrawer(){
+  var d=$("#declDrawer"); d.classList.remove("open"); $("#drawerBg").classList.remove("open");
+  setTimeout(function(){ if(!d.classList.contains("open"))d.classList.remove("shown"); },300);
+}
+$("#openDecl2").addEventListener("click",openDrawer);
+$$("#tabs .mtab").forEach(function(t){ if(t.dataset.sec==="khai")t.addEventListener("click",openDrawer); });
+$("#declClose").addEventListener("click",closeDrawer);
+$("#drawerBg").addEventListener("click",closeDrawer);
+$("#declForm").addEventListener("submit",function(e){
+  e.preventDefault(); var f=e.target;
+  function push(photoUrl){
+    state.declarations.push({
+      id:nextId(), name:F(f,"name").value.trim(), gen:Number(F(f,"gen").value)||"",
+      gender:F(f,"gender").value, status:F(f,"status").value, birth:F(f,"birth").value.trim(),
+      death:F(f,"death").value.trim(), deathLunar:F(f,"deathLunar").value.trim(), father:F(f,"father").value.trim(),
+      spouse:F(f,"spouse").value.trim(), spouseRel:"", branch:"", home:F(f,"home").value.trim(), note:F(f,"note").value.trim(),
+      reporter:F(f,"reporter").value.trim(), reporterPhone:F(f,"reporterPhone").value.trim(), reporterRel:F(f,"reporterRel").value.trim(),
+      photo:photoUrl||""
+    });
+    syncDeclaration(state.declarations[state.declarations.length-1]);
+    f.reset();
+    var n=$("#declNotice"); n.className="notice ok"; n.textContent="✔ Đã ghi nhận khai báo và lưu lại trên trình duyệt này. Ban biên soạn sẽ kiểm tra và duyệt vào sơ đồ cây.";
+    renderDecl(); saveData();
+  }
+  var file=F(f,"photoFile").files&&F(f,"photoFile").files[0];
+  if(file){ var r=new FileReader(); r.onload=function(){push(String(r.result))}; r.readAsDataURL(file); }
+  else push(F(f,"photoUrl").value.trim());
+});
+function declRows(admin){
+  return state.declarations.map(function(d){
+    return '<div class="row"><span class="nm">'+esc(d.name)+(d.gen?' · Đời '+d.gen:"")+'</span>'
+      +'<span class="note">'+esc(d.status==="song"?"Còn sống":d.status==="lietsi"?"Liệt sĩ":"Đã mất")+(d.reporter?" · Khai bởi: "+esc(d.reporter):"")+(d.reporterPhone?" · "+esc(d.reporterPhone):"")+'</span>'
+      +(admin?'<button class="btn btn-red btn-sm" data-approve="'+d.id+'" type="button">Duyệt vào cây</button><button class="btn btn-sm" data-deldecl="'+d.id+'" type="button">Xóa</button>':"")
+      +'</div>';
+  }).join("");
+}
+function renderDecl(){
+  var box=$("#declList");
+  box.innerHTML= state.declarations.length
+    ? '<div class="panel"><h3>Danh sách khai báo đã gửi ('+state.declarations.length+')</h3><div class="member-admin">'+declRows(false)+'</div><p class="note">Khai báo đang chờ Ban biên soạn kiểm tra và duyệt vào sơ đồ cây.</p></div>'
+    : "";
+  var ab=$("#declAdmin");
+  if(unlocked){
+    ab.innerHTML= state.declarations.length? '<div class="member-admin">'+declRows(true)+'</div>' : '<p class="note">Chưa có khai báo nào đang chờ duyệt.</p>';
+    $$("#declAdmin [data-approve]").forEach(function(b){ b.addEventListener("click",function(){
+      var d=null; state.declarations=state.declarations.filter(function(x){ if(x.id===b.dataset.approve){d=x;return false} return true });
+      if(d){ var nd={}; for(var k in d)nd[k]=d[k]; nd.id=nextId(); nd.gen=Number(nd.gen)||1; state.members.push(nd); }
+      renderAll();
+    })});
+    $$("#declAdmin [data-deldecl]").forEach(function(b){ b.addEventListener("click",function(){
+      state.declarations=state.declarations.filter(function(x){return x.id!==b.dataset.deldecl}); renderAll();
+    })});
+  }
+}
+
+/* ---------- ADMIN: THÀNH VIÊN ---------- */
+function renderAdmin(){
+  var box=$("#memberAdmin");
+  if(!state.members.length){ box.innerHTML='<p class="note">Chưa có thành viên nào. Điền mẫu ở trên để thêm người đầu tiên (thường là Thủy tổ, đời 1).</p>'; return; }
+  var sorted=state.members.slice().sort(function(a,b){return a.gen-b.gen||a.name.localeCompare(b.name,"vi")});
+  box.innerHTML=sorted.map(function(m){
+    return '<div class="row"><span class="nm">'+esc(m.name)+' <span class="note">· Đời '+m.gen+'</span></span>'
+      +'<button class="btn btn-sm" data-edit="'+m.id+'" type="button">Sửa</button>'
+      +'<button class="btn btn-sm btn-danger" data-del="'+m.id+'" type="button">Xóa</button></div>';
+  }).join("");
+  $$("#memberAdmin [data-edit]").forEach(function(b){ b.addEventListener("click",function(){
+    var m=null; state.members.forEach(function(x){if(x.id===b.dataset.edit)m=x}); if(!m)return;
+    var f=$("#memberForm");
+    F(f,"id").value=m.id; F(f,"name").value=m.name; F(f,"gen").value=m.gen; F(f,"gender").value=m.gender; F(f,"status").value=m.status;
+    F(f,"birth").value=m.birth||""; F(f,"death").value=m.death||""; F(f,"deathLunar").value=m.deathLunar||"";
+    F(f,"father").value=m.father||""; F(f,"spouse").value=m.spouse||""; F(f,"spouseRel").value=m.spouseRel||"";
+    F(f,"branch").value=m.branch||""; F(f,"home").value=m.home||""; F(f,"note").value=m.note||"";
+    $("#memberSubmit").textContent="Lưu thay đổi"; $("#memberCancel").style.display="";
+    f.scrollIntoView({behavior:"smooth",block:"center"});
+  })});
+  $$("#memberAdmin [data-del]").forEach(function(b){ b.addEventListener("click",function(){
+    state.members=state.members.filter(function(x){return x.id!==b.dataset.del}); renderAll();
+  })});
+}
+
+/* ---------- SOẠN VĂN BẢN ---------- */
+function fillTextTargets(){
+  var sel=$("#textTarget"), opts="";
+  state.chapters.forEach(function(c,i){opts+='<option value="c'+i+'">'+esc(c.title)+'</option>'});
+  state.prayers.forEach(function(p,i){opts+='<option value="p'+i+'">'+esc(p.title)+'</option>'});
+  sel.innerHTML=opts; loadTextTarget();
+}
+function currentTextItem(){ var v=$("#textTarget").value, idx=parseInt(v.slice(1),10); return v.charAt(0)==="c"?state.chapters[idx]:state.prayers[idx]; }
+function loadTextTarget(){ var it=currentTextItem(); if(!it)return; $("#textTitle").value=it.title; $("#textBody").value=it.body||""; }
+$("#textTarget").addEventListener("change",loadTextTarget);
+$("#textSave").addEventListener("click",function(){
+  var it=currentTextItem(); if(!it)return;
+  it.title=$("#textTitle").value.trim()||it.title; it.body=$("#textBody").value;
+  fillTextTargets(); renderTexts(); saveData(); editorMsg("Đã lưu nội dung mục đã chọn — nội dung đã được lưu tự động trên trình duyệt này.");
+});
+function editorMsg(msg){ var box=$("#editBox .notice.ok"); if(!box)return; var saved=$("#saveStatus")?$("#saveStatus").textContent:""; box.innerHTML="✔ "+esc(msg)+' <span id="saveStatusTop"></span>'; var sp=document.getElementById("saveStatusTop"); if(sp&&saved)sp.textContent=saved; }
+
+function renderAll(){ renderClan(); renderTree(); renderTexts(); renderAnniv(); renderFunds(); renderGallery(); renderDecl(); if(unlocked){renderAdmin(); renderGallery();} saveData(); }
+
+["q","fGen","fGender","fStatus","fSort"].forEach(function(id){ $("#"+id).addEventListener("input",renderTree); $("#"+id).addEventListener("change",renderTree); });
+["fBranch","fHome"].forEach(function(id){ $("#"+id).addEventListener("input",renderTree); });
+
+/* ---------- PIN / BAN BIÊN SOẠN ---------- */
+$("#pinForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  if($("#pinInput").value===state.pin){
+    unlocked=true; authPin=$("#pinInput").value; fetchShared();
+    $("#pinScreen").style.display="none"; $("#editBox").style.display="";
+    var cf=$("#clanForm");
+    F(cf,"name").value=state.clan.name; F(cf,"village").value=state.clan.village;
+    F(cf,"chief").value=state.clan.chief; F(cf,"message").value=state.clan.message;
+    F(cf,"church").value=state.clan.church||""; F(cf,"announce").value=state.clan.announce||"";
+    fillTextTargets(); renderAll();
+  }else{
+    var n=$("#pinNotice"); n.className="notice err"; n.textContent="Mã PIN chưa đúng, mời nhập lại.";
+  }
+  $("#pinInput").value="";
+});
+$("#lockBtn").addEventListener("click",function(){
+  unlocked=false; $("#editBox").style.display="none"; $("#pinScreen").style.display=""; renderDecl();
+});
+$("#changePinForm").addEventListener("submit",function(e){
+  e.preventDefault(); var v=F(e.target,"newpin").value.trim();
+  if(v){ authPin=v; state.pin=v; e.target.reset(); saveData(); editorMsg("Đã đổi mã PIN Ban biên soạn và lưu lại — lần mở sau dùng PIN mới này."); }
+});
+$("#clanForm").addEventListener("submit",function(e){
+  e.preventDefault(); var f=e.target;
+  state.clan={name:F(f,"name").value.trim(),village:F(f,"village").value.trim(),chief:F(f,"chief").value.trim(),message:F(f,"message").value.trim(),church:F(f,"church").value.trim(),announce:F(f,"announce").value.trim()};
+  renderClan(); saveData(); editorMsg("Đã cập nhật thông tin dòng họ và lưu lại trên trình duyệt này.");
+});
+$("#memberForm").addEventListener("submit",function(e){
+  e.preventDefault(); var f=e.target;
+  var data={name:F(f,"name").value.trim(),gen:Number(F(f,"gen").value)||1,gender:F(f,"gender").value,status:F(f,"status").value,
+    birth:F(f,"birth").value.trim(),death:F(f,"death").value.trim(),deathLunar:F(f,"deathLunar").value.trim(),
+    father:F(f,"father").value.trim(),spouse:F(f,"spouse").value.trim(),spouseRel:F(f,"spouseRel").value.trim(),
+    branch:F(f,"branch").value.trim(),home:F(f,"home").value.trim(),note:F(f,"note").value.trim()};
+  if(F(f,"id").value){ state.members.forEach(function(m){ if(m.id===F(f,"id").value){ for(var k in data)m[k]=data[k]; } }); }
+  else{ data.id=nextId(); state.members.push(data); }
+  f.reset(); F(f,"id").value=""; $("#memberSubmit").textContent="Thêm vào sơ đồ cây"; $("#memberCancel").style.display="none";
+  renderAll(); editorMsg("Đã lưu thành viên vào sơ đồ cây — đã lưu tự động trên trình duyệt này, đóng trang mở lại vẫn còn.");
+});
+$("#memberCancel").addEventListener("click",function(){
+  var f=$("#memberForm"); f.reset(); F(f,"id").value="";
+  $("#memberSubmit").textContent="Thêm vào sơ đồ cây"; $("#memberCancel").style.display="none";
+});
+$("#fundForm").addEventListener("submit",function(e){
+  e.preventDefault(); var f=e.target;
+  state.funds.push({id:nextId(),name:F(f,"name").value.trim(),type:F(f,"type").value,amount:Number(F(f,"amount").value)||0,date:F(f,"date").value.trim(),note:F(f,"note").value.trim()});
+  f.reset(); renderFunds(); saveData(); editorMsg("Đã thêm khoản vào sổ quỹ họ và lưu lại trên trình duyệt này.");
+});
+$("#photoForm").addEventListener("submit",function(e){
+  e.preventDefault(); var f=e.target;
+  function add(url){
+    if(!url){ editorMsg("Cần có link ảnh hoặc chọn ảnh từ máy trước khi thêm."); return; }
+    state.photos.push({id:nextId(),url:url,caption:F(f,"caption").value.trim(),year:F(f,"year").value.trim(),group:F(f,"group").value});
+    f.reset(); renderGallery(); saveData(); editorMsg("Đã thêm ảnh vào mục trưng bày và lưu lại trên trình duyệt này.");
+  }
+  var file=F(f,"file").files&&F(f,"file").files[0];
+  if(file){ var r=new FileReader(); r.onload=function(){add(String(r.result))}; r.readAsDataURL(file); }
+  else add(F(f,"url").value.trim());
+});
+
+/* ---------- XUẤT / NHẬP ---------- */
+function exportData(){ return JSON.stringify({app:"gia-pha-dong-ho",version:2,pin:state.pin,clan:state.clan,members:state.members,chapters:state.chapters,prayers:state.prayers,funds:state.funds,photos:state.photos,declarations:state.declarations},null,2); }
+$("#exportBtn").addEventListener("click",function(){
+  var blob=new Blob([exportData()],{type:"application/json"});
+  var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="gia-pha-du-lieu.json";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(a.href)},2000);
+});
+$("#importFile").addEventListener("change",function(){
+  var file=this.files&&this.files[0]; if(!file)return;
+  var r=new FileReader();
+  r.onload=function(){
+    try{
+      var d=JSON.parse(String(r.result));
+      if(d.pin)state.pin=String(d.pin);
+      if(d.clan)state.clan=d.clan;
+      ["members","chapters","prayers","funds","photos","declarations"].forEach(function(k){ if(d[k])state[k]=d[k]; });
+      state.photos.forEach(function(p){ if(!p.group)p.group="nhatho"; });
+      state.members.forEach(function(m){ if(m.spouseRel==null)m.spouseRel=""; if(m.branch==null)m.branch=""; });
+      var cf=$("#clanForm");
+      F(cf,"name").value=state.clan.name||""; F(cf,"village").value=state.clan.village||"";
+      F(cf,"chief").value=state.clan.chief||""; F(cf,"message").value=state.clan.message||"";
+      F(cf,"church").value=state.clan.church||""; F(cf,"announce").value=state.clan.announce||"";
+      fillTextTargets(); renderAll(); editorMsg("Đã nhập dữ liệu từ file thành công và lưu lại trên trình duyệt này — mở lại trang vẫn còn.");
+    }catch(err){ editorMsg("File không hợp lệ, chưa nhập được dữ liệu."); }
+  };
+  r.readAsText(file); this.value="";
+});
+$("#printBtn").addEventListener("click",function(){
+  var lines=[];
+  lines.push("GIA PHẢ "+(state.clan.name||"DÒNG HỌ"));
+  lines.push("Quê quán: "+(state.clan.village||""));
+  lines.push("Trưởng tộc: "+(state.clan.chief||""));
+  lines.push(""); lines.push("== THÀNH VIÊN ("+state.members.length+") ==");
+  state.members.slice().sort(function(a,b){return a.gen-b.gen}).forEach(function(m){
+    lines.push("Đời "+m.gen+" · "+m.name+" ("+m.gender+") — Sinh: "+(m.birth||"…")+" · Mất: "+(m.death||"…")+(m.deathLunar?" · Giỗ: "+m.deathLunar+" ÂL":"")+(m.father?" · Cha: "+m.father:"")+(m.spouse?" · Vợ/chồng: "+m.spouse:""));
+  });
+  lines.push(""); lines.push("== QUỸ HỌ ==");
+  state.funds.forEach(function(f){ lines.push((f.date||"")+" · "+f.name+" · "+(f.type==="chi"?"Chi −":"Thu +")+fmtMoney(f.amount)); });
+  var blob=new Blob([lines.join("\n")],{type:"text/plain;charset=utf-8"});
+  var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="gia-pha-tom-tat.txt";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(a.href)},2000);
+});
+
+var hadSavedData=loadSavedData();
+renderAll();
+booted=true; fetchShared();
+if(hadSavedData){
+  saveStatusText("✔ Đã khôi phục nội dung đã lưu trên trình duyệt này. Mọi cập nhật tiếp theo ở Ban biên soạn sẽ tự động lưu lại tại đây.");
+}else{
+  saveStatusText("Chưa có bản lưu cũ trên trình duyệt này — hãy cập nhật thông tin ở Ban biên soạn, nội dung sẽ tự động lưu lại trên trình duyệt này.");
+}
+document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="hidden")saveData(); });
+window.addEventListener("beforeunload",function(){ saveData(); });
+})();
+</script>
+</body>
+</html>
