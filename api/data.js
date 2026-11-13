@@ -7,7 +7,12 @@
    Cần 2 biến môi trường trên project Vercel gia-pha-dong-ho-bui (Production):
      SHEETS_API_URL = URL Web app Apps Script dạng .../exec
      SHEETS_SECRET  = đúng chuỗi SECRET đã đặt trong Script Properties
-   Thiếu 1 trong 2 -> 503 sheets_unavailable, trang vẫn chạy bằng localStorage.
+   Lỗi được phân biệt rõ (không lộ secret hay URL đầy đủ trong response):
+     env_missing        -> thiếu SHEETS_API_URL / SHEETS_SECRET
+     script_http        -> Apps Script trả HTTP không ok (kèm status)
+     script_forbidden   -> Apps Script trả {ok:false, error:"forbidden"} (sai SECRET)
+     script_error       -> Apps Script trả JSON không ok khác (kèm script_error)
+     script_fetch_failed -> lỗi fetch / parse JSON khi gọi Apps Script
    File chung nằm trên Drive của user (gia-pha-state.json, riêng tư), không phải
    repo GitHub public như bản github-sync, cũng không tốn Blob ops. */
 
@@ -18,43 +23,60 @@ function send(res, status, obj) {
   res.json(obj);
 }
 
-function noSheets(res) {
-  return send(res, 503, {
-    ok: false,
-    error: "sheets_unavailable",
-    message:
-      "Google Apps Script storage is not configured or unavailable. Shared sync is unavailable; the page keeps working with browser-local storage.",
-  });
+function scriptError(res, result) {
+  const obj = { ok: false, error: result.error };
+  if (result.status) obj.status = result.status;
+  if (result.script_error) obj.script_error = result.script_error;
+  return send(res, 503, obj);
 }
 
 async function callScript(method, payload) {
   const url = process.env.SHEETS_API_URL;
   const secret = process.env.SHEETS_SECRET;
-  if (!url || !secret) return null;
-  if (method === "GET") {
-    const r = await fetch(url + "?key=" + encodeURIComponent(secret), {
-      cache: "no-store",
-    });
-    if (!r.ok) return null;
-    return await r.json();
+  try {
+    let r;
+    if (method === "GET") {
+      r = await fetch(url + "?key=" + encodeURIComponent(secret), {
+        cache: "no-store",
+      });
+    } else {
+      r = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: secret, ...payload }),
+      });
+    }
+    if (!r.ok) return { error: "script_http", status: r.status };
+    let j;
+    try {
+      j = await r.json();
+    } catch (e) {
+      return { error: "script_fetch_failed" };
+    }
+    if (!j || typeof j !== "object") return { error: "script_fetch_failed" };
+    if (j.ok) return { ok: true, json: j };
+    if (j.error === "forbidden") return { error: "script_forbidden" };
+    return {
+      error: "script_error",
+      script_error: typeof j.error === "string" ? j.error : "unknown",
+    };
+  } catch (e) {
+    return { error: "script_fetch_failed" };
   }
-  const r = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ key: secret, ...payload }),
-  });
-  if (!r.ok) return null;
-  return await r.json();
 }
 
 export default async function handler(req, res) {
-  if (!process.env.SHEETS_API_URL || !process.env.SHEETS_SECRET) {
-    return noSheets(res);
+  const url = process.env.SHEETS_API_URL;
+  const secret = process.env.SHEETS_SECRET;
+  if (!url || !secret) {
+    const which = !url && !secret ? "both" : !url ? "api_url" : "secret";
+    return send(res, 503, { ok: false, error: "env_missing", which });
   }
   try {
     if (req.method === "GET") {
-      const j = await callScript("GET");
-      if (!j || !j.ok) return noSheets(res);
+      const result = await callScript("GET");
+      if (!result.ok) return scriptError(res, result);
+      const j = result.json;
       if (!j.exists) return send(res, 200, { ok: true, exists: false });
       return send(res, 200, { ok: true, exists: true, data: j.data });
     }
@@ -70,9 +92,9 @@ export default async function handler(req, res) {
         if (!entry.name || typeof entry.name !== "string") {
           return send(res, 400, { ok: false, error: "bad_entry" });
         }
-        const j = await callScript("POST", { action: "declare", entry });
-        if (!j || !j.ok) return noSheets(res);
-        return send(res, 200, { ok: true, savedAt: j.savedAt });
+        const result = await callScript("POST", { action: "declare", entry });
+        if (!result.ok) return scriptError(res, result);
+        return send(res, 200, { ok: true, savedAt: result.json.savedAt });
       }
 
       const data = body.data || {};
@@ -86,18 +108,21 @@ export default async function handler(req, res) {
           message: "Data over 1.5 MB (photos too large). Remove some photos and retry.",
         });
       }
-      const j = await callScript("POST", { pin: body.pin, data });
-      if (!j || !j.ok) {
-        if (j && j.error === "wrong_pin") {
+      const result = await callScript("POST", { pin: body.pin, data });
+      if (!result.ok) {
+        if (
+          result.error === "script_error" &&
+          result.script_error === "wrong_pin"
+        ) {
           return send(res, 403, { ok: false, error: "wrong_pin" });
         }
-        return noSheets(res);
+        return scriptError(res, result);
       }
-      return send(res, 200, { ok: true, savedAt: j.savedAt });
+      return send(res, 200, { ok: true, savedAt: result.json.savedAt });
     }
 
     return send(res, 405, { ok: false, error: "method_not_allowed" });
   } catch (e) {
-    return noSheets(res);
+    return send(res, 503, { ok: false, error: "script_fetch_failed" });
   }
 }
