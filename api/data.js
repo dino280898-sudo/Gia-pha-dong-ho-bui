@@ -1,123 +1,103 @@
-import { head, put } from "@vercel/blob";
-
-/* Gia Phả Dòng Họ — shared state API (1 file JSON duy nhất).
-   GET  /api/data            -> {ok, exists, data?}  (doc gia-pha/state.json)
+/* Gia Phả Dòng Họ — shared state API qua Google Apps Script + Drive.
+   Bản thay thế cho api/data.js (Blob), giữ NGUYÊN hợp đồng với index.html:
+   GET  /api/data            -> {ok, exists, data?}
    POST /api/data {pin, data} -> ghi đè toàn bộ doc, chỉ khi pin khớp pin đang lưu
    POST /api/data {action:"declare", entry} -> thêm 1 khai báo (không cần PIN)
-   Ops: GET ~2 (head + content fetch), POST ~3 (head + content + put).
    Không polling: client chỉ đọc 1 lần khi mở trang, chỉ ghi khi Ban biên soạn lưu.
-   Nếu BLOB_READ_WRITE_TOKEN thiếu (store chưa nối / đang bị suspend) -> 503
-   blob_unavailable, client vẫn chạy bằng localStorage. */
+   Cần 2 biến môi trường trên project Vercel gia-pha-dong-ho-bui (Production):
+     SHEETS_API_URL = URL Web app Apps Script dạng .../exec
+     SHEETS_SECRET  = đúng chuỗi SECRET đã đặt trong Script Properties
+   Thiếu 1 trong 2 -> 503 sheets_unavailable, trang vẫn chạy bằng localStorage.
+   File chung nằm trên Drive của user (gia-pha-state.json, riêng tư), không phải
+   repo GitHub public như bản github-sync, cũng không tốn Blob ops. */
 
-const PATH = "gia-pha/state.json";
-const MAX_BYTES = 1500000; // ~1.5 MB: đủ cho hàng trăm thành viên; ảnh base64 lớn nên nén trước
+const MAX_BYTES = 1500000;
 
 function send(res, status, obj) {
   res.status(status).setHeader("Content-Type", "application/json");
   res.json(obj);
 }
 
-function noBlob(res) {
+function noSheets(res) {
   return send(res, 503, {
     ok: false,
-    error: "blob_unavailable",
+    error: "sheets_unavailable",
     message:
-      "Blob storage is not connected or is suspended (quota). Shared sync is unavailable; the page keeps working with browser-local storage.",
+      "Google Apps Script storage is not configured or unavailable. Shared sync is unavailable; the page keeps working with browser-local storage.",
   });
 }
 
-async function readDoc() {
-  try {
-    const h = await head(PATH);
-    if (!h) return null;
-    const r = await fetch(h.downloadUrl || h.url, { cache: "no-store" });
+async function callScript(method, payload) {
+  const url = process.env.SHEETS_API_URL;
+  const secret = process.env.SHEETS_SECRET;
+  if (!url || !secret) return null;
+  if (method === "GET") {
+    const r = await fetch(url + "?key=" + encodeURIComponent(secret), {
+      cache: "no-store",
+    });
     if (!r.ok) return null;
     return await r.json();
-  } catch (e) {
-    return null; // BlobNotFoundError etc. -> chưa có bản chung
   }
-}
-
-function emptyDoc() {
-  return {
-    app: "gia-pha-dong-ho",
-    version: 2,
-    savedAt: new Date().toISOString(),
-    pin: "1234",
-    clan: { name: "", village: "", chief: "", message: "", church: "", announce: "" },
-    members: [],
-    chapters: [],
-    prayers: [],
-    funds: [],
-    photos: [],
-    declarations: [],
-  };
+  const r = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ key: secret, ...payload }),
+  });
+  if (!r.ok) return null;
+  return await r.json();
 }
 
 export default async function handler(req, res) {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return noBlob(res);
+  if (!process.env.SHEETS_API_URL || !process.env.SHEETS_SECRET) {
+    return noSheets(res);
+  }
   try {
     if (req.method === "GET") {
-      const doc = await readDoc();
-      if (!doc) return send(res, 200, { ok: true, exists: false });
-      return send(res, 200, { ok: true, exists: true, data: doc });
+      const j = await callScript("GET");
+      if (!j || !j.ok) return noSheets(res);
+      if (!j.exists) return send(res, 200, { ok: true, exists: false });
+      return send(res, 200, { ok: true, exists: true, data: j.data });
     }
 
     if (req.method === "POST") {
-      const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
+      const body =
+        typeof req.body === "string"
+          ? JSON.parse(req.body || "{}")
+          : req.body || {};
 
-      // Khai báo của con cháu: ai cũng gửi được, không cần PIN; Ban biên soạn duyệt sau.
       if (body.action === "declare") {
         const entry = body.entry || {};
         if (!entry.name || typeof entry.name !== "string") {
           return send(res, 400, { ok: false, error: "bad_entry" });
         }
-        const doc = (await readDoc()) || emptyDoc();
-        doc.declarations = Array.isArray(doc.declarations) ? doc.declarations : [];
-        doc.declarations.push(entry);
-        doc.savedAt = new Date().toISOString();
-        await put(PATH, JSON.stringify(doc), {
-          access: "public",
-          allowOverwrite: true,
-          addRandomSuffix: false,
-          contentType: "application/json",
-          cacheControlMaxAge: 0,
-        });
-        return send(res, 200, { ok: true, savedAt: doc.savedAt });
+        const j = await callScript("POST", { action: "declare", entry });
+        if (!j || !j.ok) return noSheets(res);
+        return send(res, 200, { ok: true, savedAt: j.savedAt });
       }
 
-      // Ghi toàn bộ: chỉ người nhập đúng PIN Ban biên soạn mới được ghi.
       const data = body.data || {};
       if (data.app !== "gia-pha-dong-ho") {
         return send(res, 400, { ok: false, error: "bad_data" });
       }
-      const raw = JSON.stringify(data);
-      if (raw.length > MAX_BYTES) {
+      if (JSON.stringify(data).length > MAX_BYTES) {
         return send(res, 413, {
           ok: false,
           error: "too_large",
           message: "Data over 1.5 MB (photos too large). Remove some photos and retry.",
         });
       }
-      const current = await readDoc();
-      if (current && String(body.pin || "") !== String(current.pin || "")) {
-        return send(res, 403, { ok: false, error: "wrong_pin" });
+      const j = await callScript("POST", { pin: body.pin, data });
+      if (!j || !j.ok) {
+        if (j && j.error === "wrong_pin") {
+          return send(res, 403, { ok: false, error: "wrong_pin" });
+        }
+        return noSheets(res);
       }
-      data.savedAt = new Date().toISOString();
-      await put(PATH, JSON.stringify(data), {
-        access: "public",
-        allowOverwrite: true,
-        addRandomSuffix: false,
-        contentType: "application/json",
-        cacheControlMaxAge: 0,
-      });
-      return send(res, 200, { ok: true, savedAt: data.savedAt });
+      return send(res, 200, { ok: true, savedAt: j.savedAt });
     }
 
     return send(res, 405, { ok: false, error: "method_not_allowed" });
   } catch (e) {
-    const msg = String((e && e.message) || e || "");
-    if (/suspend|quota|403|forbidden/i.test(msg)) return noBlob(res);
-    return send(res, 500, { ok: false, error: "server_error", message: msg.slice(0, 200) });
+    return noSheets(res);
   }
 }
